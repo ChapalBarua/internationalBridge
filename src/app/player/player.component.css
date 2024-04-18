@@ -1,0 +1,27 @@
+.card-box {
+    position: absolute;
+    width: 100px;
+    height: 110px;
+    border: 4px black;
+}
+
+
+.left-box {
+    left: 160px;
+    top: 280px;
+}
+
+.right-box {
+    right: 160px;
+    top: 280px;
+}
+
+.bottom-box {
+    left: 280px;
+    bottom: 100px;
+}
+
+.top-box {
+    left: 280px;
+    top: 100px;
+}
