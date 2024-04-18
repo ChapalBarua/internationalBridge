@@ -47,11 +47,48 @@
 .bottom-player-name {
     position: absolute;
     left: 300px;
-    bottom: 80px;
+    bottom: 60px;
 }
 
 .right-player-name {
     position: absolute;
     right: 40px;
     top: 280px;
+}
+
+.left-played-card-box {
+    position: absolute;
+    left: 160px;
+    top: 280px;
+    width: 100px;
+    height: 110px;
+    border: 4px black;
+}
+
+.right-played-card-box {
+    position: absolute;
+    right: 160px;
+    top: 280px;
+    width: 100px;
+    height: 110px;
+    border: 4px black;
+}
+
+
+.top-played-card-box {
+    position: absolute;
+    left: 280px;
+    top: 100px;
+    width: 100px;
+    height: 110px;
+    border: 4px black;
+}
+
+.bottom-played-card-box {
+    position: absolute;
+    left: 280px;
+    bottom: 100px;
+    width: 100px;
+    height: 110px;
+    border: 4px black;
 }

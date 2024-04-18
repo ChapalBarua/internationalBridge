@@ -12,6 +12,8 @@ export class CardComponent implements OnInit, AfterViewInit {
   @Input() cardType!: string;
   @Input() cardValue!: string;
   @Input() orientation!: string;
+  @Input() height: string = "55px";
+  @Input() width: string = "50px";
   imageUrl ='';
 
   ngOnInit(): void {
