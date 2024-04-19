@@ -1,7 +1,7 @@
-import { AfterContentInit, AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { PlayerComponent } from './player/player.component';
 import { CardService } from './card.service';
-import { PlayedCard } from './card/card.component';
+import { PlayedCard } from './types';
 
 @Component({
   selector: 'app-root',
@@ -47,9 +47,14 @@ export class AppComponent implements OnInit, AfterViewInit, AfterContentInit{
   @ViewChild('playerThree') playerThree!: PlayerComponent;
   @ViewChild('playerFour') playerFour!: PlayerComponent;
 
-  undoAble = false; // flag for undoing last move
+  public undoAble = false; // flag for undoing last move
 
-  constructor(private cardService: CardService){
+  public setundoAble(flag: boolean){
+    this.undoAble = flag;
+    this.changeDetector.detectChanges();
+  }
+
+  constructor(private cardService: CardService, private changeDetector: ChangeDetectorRef){
     
   }
 
@@ -70,38 +75,40 @@ export class AppComponent implements OnInit, AfterViewInit, AfterContentInit{
 
     // after a card is played (coming from server)- perform operations
     this.cardService.playedCard$.subscribe((playedCard: PlayedCard)=>{
-      this.undoAble = false;
+      if(!playedCard.card) return;
+      this.setundoAble(false);
       switch(playedCard.player){
         case 'left':
-          this.playerTwo.playCard(playedCard);
+          this.playerTwo.playCard(playedCard.card);
           break;
         case 'right':
-          this.playerFour.playCard(playedCard);
+          this.playerFour.playCard(playedCard.card);
           break;
         case 'bottom':
-          this.playerOne.playCard(playedCard);
+          this.playerOne.playCard(playedCard.card);
           break;
         case 'top':
-          this.playerThree.playCard(playedCard);
+          this.playerThree.playCard(playedCard.card);
           break;
       }
     });
 
     // after undoing last played card (coming from server)- perform operations - remove that card from table and place it in player's hand
     this.cardService.unPlayedCard$.subscribe((unPlayedCard: PlayedCard)=>{
-      this.undoAble = true;
+      if(!unPlayedCard.card) return;
+      this.setundoAble(true);
       switch(unPlayedCard.player){
         case 'left':
-          this.playerTwo.unplayCard(unPlayedCard);
+          this.playerTwo.unplayCard(unPlayedCard.card);
           break;
         case 'right':
-          this.playerFour.unplayCard(unPlayedCard);
+          this.playerFour.unplayCard(unPlayedCard.card);
           break;
         case 'bottom':
-          this.playerOne.unplayCard(unPlayedCard);
+          this.playerOne.unplayCard(unPlayedCard.card);
           break;
         case 'top':
-          this.playerThree.unplayCard(unPlayedCard);
+          this.playerThree.unplayCard(unPlayedCard.card);
           break;
       }
     });
@@ -131,7 +138,7 @@ export class AppComponent implements OnInit, AfterViewInit, AfterContentInit{
     this.playerTwo.clearPlayedCard();
     this.playerThree.clearPlayedCard();
     this.playerFour.clearPlayedCard();
-    this.undoAble = true;
+    this.setundoAble(true);
   }
 
   /**

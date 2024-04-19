@@ -1,9 +1,13 @@
 <span *ngFor = "let card of cards">
-    <app-card [cardType]="card.cardType" [cardValue]="card.cardValue" [orientation]="orientation"></app-card>
+    <app-card [card]="card" [orientation]="orientation"></app-card>
 </span>
 
-<div class="card-box" [ngClass]="{'left-box': orientation === 'left', 'right-box' : orientation === 'right',
-    'bottom-box': orientation === 'bottom', 'top-box' : orientation === 'top' }">
 
-    <app-card [cardType]="playedCardType" [cardValue]="playedCardValue" [width]="'80px'" [height]="'110px'" #playedCard> </app-card>
-</div>
+<ng-container *ngIf="playedCard as userPlayedCard">
+    <div class="card-box"  [ngClass]="{'left-box': orientation === 'left', 'right-box' : orientation === 'right',
+        'bottom-box': orientation === 'bottom', 'top-box' : orientation === 'top' }">
+        
+        <app-card [card]="userPlayedCard" [width]="'80px'" [height]="'110px'" #playedCard> </app-card>
+    </div>
+</ng-container>
+

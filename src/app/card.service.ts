@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
-import { Card, PlayerComponent, getShuffledCardsDeck } from './player/player.component';
+import { PlayerComponent } from './player/player.component';
 import { BehaviorSubject } from 'rxjs';
-import { PlayedCard } from './card/card.component';
+import { Card, PlayedCard, getShuffledCardsDeck } from './types';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CardService {
 
-  playedCard$ = new BehaviorSubject<PlayedCard>({player: '', cardType: '', cardValue: ''});
-  unPlayedCard$ = new BehaviorSubject<PlayedCard>({player: '', cardType: '', cardValue: ''});
+  playedCard$ = new BehaviorSubject<PlayedCard>({player: '', card: null});
+  unPlayedCard$ = new BehaviorSubject<PlayedCard>({player: '', card: null});
   roundComplete$ = new BehaviorSubject<boolean>(true);
   reshuffle$ = new BehaviorSubject<boolean>(true);
 
@@ -24,7 +24,7 @@ export class CardService {
     const numberOfCardsPerPlayer = numberOfCards/numberOfPlayers;
     let i=0;
     players.forEach(player=>{
-      player.setCard(cards.slice(i*numberOfCardsPerPlayer,(i+1)*numberOfCardsPerPlayer));
+      player.cards = cards.slice(i*numberOfCardsPerPlayer,(i+1)*numberOfCardsPerPlayer);
       i++;
     })
   }
@@ -39,5 +39,9 @@ export class CardService {
 
   shuffleCard(){
     this.reshuffle$.next(true);
+  }
+
+  showCard(cards:Card[]){
+
   }
 }
