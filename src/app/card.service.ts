@@ -12,8 +12,7 @@ export class CardService {
   unPlayedCard$ = new BehaviorSubject<PlayedCard>({player: '', card: null});
   roundComplete$ = new BehaviorSubject<boolean>(true);
   reshuffle$ = new BehaviorSubject<boolean>(true);
-
-  cardsOnBoard: Card[] = [];
+  cardsOnTable: PlayedCard[] = [];
 
   constructor() { }
 
@@ -29,6 +28,10 @@ export class CardService {
     })
   }
 
+  playCard(playedCard: PlayedCard){
+    this.playedCard$.next(playedCard);
+  }
+
   unPlayCard(card?: PlayedCard){
     this.unPlayedCard$.next(card ?? this.playedCard$.value);
   }
@@ -42,6 +45,24 @@ export class CardService {
   }
 
   showCard(cards:Card[]){
-
   }
+
+  /**
+   * 
+   * @param card - recently played card that is on the table
+   * updates cardsOnTable tracker
+   */
+  placeCardOnTable(card: PlayedCard){
+    this.cardsOnTable.push(card);
+  }
+
+  /**
+   * 
+   * @param removableCard - card that is unplayed
+   * updates cardsOnTable tracker
+   */
+  removeCardFromTable(removableCard: PlayedCard){
+    this.cardsOnTable = this.cardsOnTable.filter(playedCard=>playedCard.card?.cardType != removableCard.card?.cardType || playedCard.card?.cardValue != removableCard.card?.cardValue);
+  }
+
 }

@@ -32,6 +32,6 @@ export class CardComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   onClick(){
-    this.cardService.playedCard$.next({ player: this.orientation, card: this.card});
+    this.cardService.playCard({ player: this.orientation, card: this.card});
   }
 }
