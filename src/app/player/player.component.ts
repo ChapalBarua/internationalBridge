@@ -1,5 +1,5 @@
 import { AfterContentChecked, ChangeDetectorRef, Component, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { CardComponent, CardSuit, CardValue } from '../card/card.component';
+import { CardSuit, CardValue, PlayedCard } from '../card/card.component';
 
 @Component({
   selector: 'app-player',
@@ -11,12 +11,13 @@ export class PlayerComponent implements OnInit, AfterContentChecked {
   @Input()
   orientation!: string;
 
+  playedCardType = '';
+  playedCardValue = '';
+
   cards!: Card[];
 
-  //@ViewChildren(CardComponent) cards2!:QueryList<CardComponent>;
 
   constructor(private changeDetector: ChangeDetectorRef) { 
-    //this.cards.concat(new CardComponent(CardSuit.Spade, CardValue.Ace));
 
   }
   ngAfterContentChecked(): void {
@@ -27,21 +28,54 @@ export class PlayerComponent implements OnInit, AfterContentChecked {
     this.cards = sortCards(cards);
     this.changeDetector.detectChanges();
   }
+  /**
+   * 
+   * @param playedCard - takes input of the card played by a player. removes it from hand and place it in the box in front
+   */
+  public playCard(playedCard: Card){
+    this.cards = this.cards.filter(card=> card.cardType != playedCard.cardType || card.cardValue!= playedCard.cardValue);
+    this.setPlayedCard(playedCard);
+  }
+
+   /**
+   * 
+   * @param playedCard - takes back a card from board to hand
+   */
+  public unplayCard(playedCard: Card){
+    this.cards = sortCards(this.cards.concat(playedCard));
+    this.clearPlayedCard();
+    
+  }
+
+  /**
+   * clear the played card by the player from table
+  */
+  public clearPlayedCard(){
+    this.playedCardType = '';
+    this.playedCardValue = '';
+    this.changeDetector.detectChanges();
+  }
+
+  /**
+   * 
+   * @param playedCard - played card by the player
+   * place the card in front of the player 
+   */
+  public setPlayedCard(playedCard: Card){
+    this.playedCardType = playedCard.cardType;
+    this.playedCardValue = playedCard.cardValue;
+    this.changeDetector.detectChanges();
+  }
+
 
   ngOnInit(): void {
 
   }
 
-  public playCard(){
-
-  }
 
 }
 
-export interface Card {
-  cardType: string,
-  cardValue: string
-}
+export type Card  = Pick<PlayedCard, 'cardType' | 'cardValue'>;
 
 export function getShuffledCardsDeck(): Card[]{
   
@@ -62,7 +96,26 @@ export function getShuffledCardsDeck(): Card[]{
       [res[i], res[j]] = [res[j], res[i]]; 
   }
 
-  return res;
+  return wellDistributedDeck(res) ? res : getShuffledCardsDeck(); // checks for face card distribution
+}
+
+/**
+ * 
+ * @param cards 52 cards deck
+ * @returns if 4 set of 13 cards all have face cards
+ */
+function wellDistributedDeck(cards: Card[]): boolean | undefined{
+  if(cards.length != 52) {
+    console.log('Full 52 cards deck is not provided');
+    return;
+  }
+  return checkFaceCard(cards.slice(0,13)) && checkFaceCard(cards.slice(13,26)) && checkFaceCard(cards.slice(26,39)) && checkFaceCard(cards.slice(39,52))
+}
+
+function checkFaceCard(cards: Card[]): boolean{
+  let faceCards = cards.filter(card=> card.cardValue === CardValue.Ace ||  card.cardValue === CardValue.King 
+    || card.cardValue === CardValue.Queen || card.cardValue === CardValue.Jack);
+  return faceCards.length > 0;
 }
 
 function sortCards(cards: Card[]){

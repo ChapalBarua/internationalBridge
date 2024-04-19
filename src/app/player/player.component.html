@@ -5,5 +5,5 @@
 <div class="card-box" [ngClass]="{'left-box': orientation === 'left', 'right-box' : orientation === 'right',
     'bottom-box': orientation === 'bottom', 'top-box' : orientation === 'top' }">
 
-    <app-card [width]="'80px'" [height]="'110px'" #playedCard> </app-card>
+    <app-card [cardType]="playedCardType" [cardValue]="playedCardValue" [width]="'80px'" [height]="'110px'" #playedCard> </app-card>
 </div>

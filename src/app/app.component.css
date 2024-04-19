@@ -56,39 +56,24 @@
     top: 280px;
 }
 
-.left-played-card-box {
+.roundCompleteButton {
     position: absolute;
-    left: 160px;
-    top: 280px;
-    width: 100px;
-    height: 110px;
-    border: 4px black;
-}
-
-.right-played-card-box {
-    position: absolute;
-    right: 160px;
-    top: 280px;
-    width: 100px;
-    height: 110px;
-    border: 4px black;
-}
-
-
-.top-played-card-box {
-    position: absolute;
-    left: 280px;
+    left: 600px;
     top: 100px;
-    width: 100px;
-    height: 110px;
-    border: 4px black;
 }
 
-.bottom-played-card-box {
+.undo {
     position: absolute;
-    left: 280px;
-    bottom: 100px;
-    width: 100px;
-    height: 110px;
-    border: 4px black;
+    left: 600px;
+    top: 150px;
+}
+
+.reshuffle {
+    position: absolute;
+    left: 600px;
+    top: 200px;
+}
+
+button:hover {
+    background-color: rgb(182, 230, 173);
 }
