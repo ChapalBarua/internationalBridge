@@ -64,3 +64,21 @@ export function sortCards(cards: Card[]){
     return card2Priority - card1Priority;
   })
 }
+
+// will be used by server
+
+export type tables = table[];
+
+export type table = {
+  roomid: number,
+  players: [
+    top: Card[],
+    bottom: Card[],
+    left: Card[],
+    right: Card[]
+  ],
+  currentRound: number, // running round out of 13 card set (4*13)
+  completedGame: number, // how many games are completed
+  currentSetColor: string,
+  whoSetColor: string //('top', 'bottom', 'left', 'right')
+}

@@ -8,6 +8,9 @@ import { PlayerComponent } from './player/player.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule } from '@angular/material/button';
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+
+const config: SocketIoConfig = { url: 'https://localhost:3000', options: {} };
 
 @NgModule({
   declarations: [
@@ -20,7 +23,8 @@ import { MatButtonModule } from '@angular/material/button';
     AppRoutingModule,
     NgbModule,
     BrowserAnimationsModule,
-    MatButtonModule
+    MatButtonModule,
+    SocketIoModule.forRoot(config)
   ],
   providers: [],
   bootstrap: [AppComponent]

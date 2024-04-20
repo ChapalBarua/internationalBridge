@@ -11,6 +11,9 @@ export class PlayerComponent implements OnInit, AfterContentChecked {
   @Input()
   orientation!: Orientation;
 
+  @Input()
+  activePlayer!: Orientation;
+
   // played card by a player
   private _playedCard!: Card | null;
   public set playedCard(playedCard: Card | null){
@@ -47,6 +50,7 @@ export class PlayerComponent implements OnInit, AfterContentChecked {
     this.setPlayedCard(playedCard);
   }
 
+  // logic if want to validate card played by user
   public validateCard(){
     return true;
   }

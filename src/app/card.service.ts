@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { PlayerComponent } from './player/player.component';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, map } from 'rxjs';
 import { Card, PlayedCard, getShuffledCardsDeck } from './types';
+import { Socket } from 'ngx-socket-io';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,28 @@ export class CardService {
   reshuffle$ = new BehaviorSubject<boolean>(true);
   cardsOnTable: PlayedCard[] = [];
 
-  constructor() { }
+  localPeerId!: string;
+
+  constructor(private socket: Socket) {
+    // joining default room 1
+    this.joinRoom();
+
+    // listening to event about joining an existing room
+    this.socket.fromEvent('room_created').subscribe((event: any)=>{
+      this.localPeerId = event.peerId;
+      console.log('room created-',this.localPeerId);
+    });
+
+    // listening to event about creating and joining a room
+    this.socket.fromEvent('room_joined').subscribe((event: any)=>{
+      this.localPeerId = event.peerId;
+      console.log('room joined-',this.localPeerId);
+    });
+  }
+
+  joinRoom(roomId: number = 1){
+    this.socket.emit('join', {room: roomId, peerUUID: this.localPeerId});
+  }
 
   distributeCards(players: PlayerComponent[]){
     let cards: Card[] = getShuffledCardsDeck();
@@ -41,7 +63,8 @@ export class CardService {
   }
 
   shuffleCard(){
-    this.reshuffle$.next(true);
+    // this.reshuffle$.next(true);
+    this.socket.emit('shuffleCard');
   }
 
   showCard(cards:Card[]){
