@@ -1,66 +1,60 @@
 import { Injectable, OnInit } from '@angular/core';
 import { PlayerComponent } from './player/player.component';
 import { BehaviorSubject, map } from 'rxjs';
-import { Card, PlayedCard, RoomJoin, getShuffledCardsDeck } from './types';
+import { Card, Orientation, PlayedCard, Players, RoomJoin, getShuffledCardsDeck } from './types';
 import { Socket } from 'ngx-socket-io';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CardService {
+  activePlayerOrientation!: Orientation; // active user orientation
+  playerName = ''; // active user name
+  players! : Players;
+  cardsOnTable: PlayedCard[] = [];
+  localPeerId!: string;
+
 
   playedCard$ = new BehaviorSubject<PlayedCard>({player: '', card: null});
   unPlayedCard$ = new BehaviorSubject<PlayedCard>({player: '', card: null});
   roundComplete$ = new BehaviorSubject<boolean>(true);
-  reshuffle$ = new BehaviorSubject<boolean>(true);
-  cardsOnTable: PlayedCard[] = [];
-
-  localPeerId!: string;
+  shuffle$ = new BehaviorSubject<Card[]>([]);
 
   constructor(private socket: Socket) {
-    // joining default room 1
-    this.joinRoom();
-
     // listening to event about joining an existing room
     this.socket.fromEvent<RoomJoin>('room_created').subscribe((event: RoomJoin)=>{
-      this.localPeerId = event.peerId;
-      localStorage.setItem('orientation', event.orientation);
-      localStorage.setItem('roomId', event.roomId);
-      console.log(`room ${event.roomId} created - orientation ${event.orientation} - peer id-`, this.localPeerId);
+      console.log(`room ${event.roomId} created - orientation ${event.orientation} - peer id-`, event.peerId);
+      this.afterJoinRoom(event);
     });
 
     // listening to event about creating and joining a room
-    this.socket.fromEvent('room_joined').subscribe((event: any)=>{
-      this.localPeerId = event.peerId;
-      localStorage.setItem('orientation', event.orientation);
-      localStorage.setItem('roomId', event.roomId);
-      console.log(`room ${event.roomId} joined - orientation ${event.orientation} - peer id-`, this.localPeerId);
+    this.socket.fromEvent<RoomJoin>('room_joined').subscribe((event: RoomJoin)=>{
+      console.log(`room ${event.roomId} joined - orientation ${event.orientation} - peer id-`, event.peerId);
+      this.afterJoinRoom(event);
     });
 
     // listening to event when card is distributed
     this.socket.fromEvent<Card[]>('distribute_cards').subscribe((cards: Card[])=>{
-      console.log(cards);
+      this.shuffle$.next(cards);
     });
   }
 
-  joinRoom(roomId: string = '1'){
-    this.socket.emit('join', {room: roomId, peerUUID: this.localPeerId});
+  joinRoom(roomId: string, userName: string){
+    this.playerName = userName;
+    this.socket.emit('join', {room: roomId, peerUUID: this.localPeerId, userName: userName});
   }
 
-  setUserName(name: string){
-    this.socket.emit('setUser', name);
-  }
+  /**
+   * when server notifies a user - about joining a room - user sets up local environment
+   */
+  afterJoinRoom(event: RoomJoin){
+    this.players = event.players;
+    this.localPeerId = event.peerId;
+    this.activePlayerOrientation = event.orientation;
+    localStorage.setItem('orientation', event.orientation);
+    localStorage.setItem('roomId', event.roomId);
 
-  distributeCards(players: PlayerComponent[]){
-    let cards: Card[] = getShuffledCardsDeck();
-    let numberOfCards = cards.length;
-    let numberOfPlayers = players.length;
-    const numberOfCardsPerPlayer = numberOfCards/numberOfPlayers;
-    let i=0;
-    players.forEach(player=>{
-      player.cards = cards.slice(i*numberOfCardsPerPlayer,(i+1)*numberOfCardsPerPlayer);
-      i++;
-    })
+    console.log(event);
   }
 
   playCard(playedCard: PlayedCard){
@@ -76,7 +70,6 @@ export class CardService {
   }
 
   shuffleCard(){
-    // this.reshuffle$.next(true);
     this.socket.emit('shuffleCard');
   }
 

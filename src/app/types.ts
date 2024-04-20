@@ -69,7 +69,15 @@ export interface RoomJoin {
   roomId: string,
   peerId: string,
   user: string,
-  orientation: Orientation
+  orientation: Orientation,
+  players: Players
+}
+
+export interface Players {
+  bottom: '',
+  left: '',
+  top: '',
+  right: ''
 }
 
 // will be used by server

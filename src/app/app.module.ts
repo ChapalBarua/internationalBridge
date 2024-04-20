@@ -9,6 +9,11 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule } from '@angular/material/button';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { HomeComponent } from './home/home.component';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
 
 const config: SocketIoConfig = { url: 'https://localhost:3000', options: {} };
 
@@ -16,7 +21,8 @@ const config: SocketIoConfig = { url: 'https://localhost:3000', options: {} };
   declarations: [
     AppComponent,
     CardComponent,
-    PlayerComponent
+    PlayerComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
@@ -24,9 +30,13 @@ const config: SocketIoConfig = { url: 'https://localhost:3000', options: {} };
     NgbModule,
     BrowserAnimationsModule,
     MatButtonModule,
+    MatCardModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    MatInputModule,
     SocketIoModule.forRoot(config)
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [HomeComponent]
 })
 export class AppModule { }

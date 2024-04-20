@@ -1,11 +1,11 @@
 import { AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { PlayerComponent } from './player/player.component';
 import { CardService } from './card.service';
-import { PlayedCard } from './types';
+import { Card, PlayedCard } from './types';
 
 @Component({
   selector: 'app-root',
-  template: `  
+  template: `
   <div class="position-relative">
     <div class="left-player">
       <div class="left-player-name">Player Two</div>
@@ -32,7 +32,7 @@ import { PlayedCard } from './types';
     <button mat-raised-button  class="undo" (click)="onUndoMove()" [disabled]="undoAble">
       Undo last move
     </button>
-    <button mat-raised-button   class="reshuffle" (click)="onReshuffle()">
+    <button mat-raised-button   class="reshuffle" (click)="onshuffle()">
       Shuffle
     </button>
   </div>
@@ -42,6 +42,7 @@ import { PlayedCard } from './types';
 export class AppComponent implements OnInit, AfterViewInit, AfterContentInit{
   
   title = 'internationalBridge';
+  
   @ViewChild('playerOne') playerOne!: PlayerComponent;
   @ViewChild('playerTwo') playerTwo!: PlayerComponent;
   @ViewChild('playerThree') playerThree!: PlayerComponent;
@@ -54,24 +55,20 @@ export class AppComponent implements OnInit, AfterViewInit, AfterContentInit{
     this.changeDetector.detectChanges();
   }
 
-  constructor(private cardService: CardService, private changeDetector: ChangeDetectorRef){
-    
+  constructor(public cardService: CardService, private changeDetector: ChangeDetectorRef){
   }
 
   ngOnInit(): void {
     
   }
 
-  /**
-   * starts a new game
-   */
-  startGame(){
-    // at the begining of game - distributes card to 4 players
-    this.onReshuffle();
-  }
-
   ngAfterViewInit(): void {
-    this.startGame();
+
+    // after a shuffle button is pressed (coming from server) perform operations - clears table and distribute 52 cards to the players
+    this.cardService.shuffle$.subscribe((cards: Card[])=>{
+      this.clearTable();
+      console.log(cards);
+    })
 
     // after a card is played (coming from server)- perform operations
     this.cardService.playedCard$.subscribe((playedCard: PlayedCard)=>{
@@ -118,13 +115,7 @@ export class AppComponent implements OnInit, AfterViewInit, AfterContentInit{
       this.clearTable();
     });
 
-    // after a reshuffle button is pressed (coming from server) perform operations - clears table and distribute 52 cards to the players
-    this.cardService.reshuffle$.subscribe(shuffle=>{
-      this.clearTable();
-      this.reshuffle();
-    })
-
-
+    
   }
 
   ngAfterContentInit(): void {
@@ -138,21 +129,17 @@ export class AppComponent implements OnInit, AfterViewInit, AfterContentInit{
     this.playerTwo.clearPlayedCard();
     this.playerThree.clearPlayedCard();
     this.playerFour.clearPlayedCard();
+    this.cardService.placeCardOnTable
     this.setundoAble(true);
   }
 
-  /**
-   * clears table and distribute 52 cards to the players
-  */
-  reshuffle(){
-    this.cardService.distributeCards([this.playerOne, this.playerTwo, this.playerThree, this.playerFour]); 
-  }
+
 
 
   /**
-   * notify server after reshuffle button is pressed
+   * notify server after shuffle button is pressed
    */
-  onReshuffle(){
+  onshuffle(){
     this.cardService.shuffleCard();
   }
 
