@@ -56,7 +56,7 @@ export function checkFaceCard(cards: Card[]): boolean{
   let faceCards = cards.filter(card=> cardValues.slice(9,13).includes(card.cardValue));
   return faceCards.length > 0;
 }
-  
+
 export function sortCards(cards: Card[]){
   return cards.sort((card1,card2)=>{
     let card1Priority = cardSuits.findIndex(suit=> card1.cardType===suit) * cardValues.length +  cardValues.findIndex(value=>card1.cardValue===value);
@@ -65,20 +65,32 @@ export function sortCards(cards: Card[]){
   })
 }
 
+export interface RoomJoin {
+  roomId: string,
+  peerId: string,
+  user: string,
+  orientation: Orientation
+}
+
 // will be used by server
 
 export type tables = table[];
 
 export type table = {
   roomid: number,
-  players: [
+  players: {
     top: Card[],
     bottom: Card[],
     left: Card[],
     right: Card[]
-  ],
+  }
   currentRound: number, // running round out of 13 card set (4*13)
   completedGame: number, // how many games are completed
   currentSetColor: string,
   whoSetColor: string //('top', 'bottom', 'left', 'right')
+}
+
+export type socketUser = {
+  name: string;
+  orientation: Orientation;
 }

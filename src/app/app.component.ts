@@ -33,7 +33,7 @@ import { PlayedCard } from './types';
       Undo last move
     </button>
     <button mat-raised-button   class="reshuffle" (click)="onReshuffle()">
-      Reshuffle
+      Shuffle
     </button>
   </div>
   `,

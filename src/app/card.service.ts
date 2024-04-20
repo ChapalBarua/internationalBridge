@@ -1,7 +1,7 @@
 import { Injectable, OnInit } from '@angular/core';
 import { PlayerComponent } from './player/player.component';
 import { BehaviorSubject, map } from 'rxjs';
-import { Card, PlayedCard, getShuffledCardsDeck } from './types';
+import { Card, PlayedCard, RoomJoin, getShuffledCardsDeck } from './types';
 import { Socket } from 'ngx-socket-io';
 
 @Injectable({
@@ -22,20 +22,33 @@ export class CardService {
     this.joinRoom();
 
     // listening to event about joining an existing room
-    this.socket.fromEvent('room_created').subscribe((event: any)=>{
+    this.socket.fromEvent<RoomJoin>('room_created').subscribe((event: RoomJoin)=>{
       this.localPeerId = event.peerId;
-      console.log('room created-',this.localPeerId);
+      localStorage.setItem('orientation', event.orientation);
+      localStorage.setItem('roomId', event.roomId);
+      console.log(`room ${event.roomId} created - orientation ${event.orientation} - peer id-`, this.localPeerId);
     });
 
     // listening to event about creating and joining a room
     this.socket.fromEvent('room_joined').subscribe((event: any)=>{
       this.localPeerId = event.peerId;
-      console.log('room joined-',this.localPeerId);
+      localStorage.setItem('orientation', event.orientation);
+      localStorage.setItem('roomId', event.roomId);
+      console.log(`room ${event.roomId} joined - orientation ${event.orientation} - peer id-`, this.localPeerId);
+    });
+
+    // listening to event when card is distributed
+    this.socket.fromEvent<Card[]>('distribute_cards').subscribe((cards: Card[])=>{
+      console.log(cards);
     });
   }
 
-  joinRoom(roomId: number = 1){
+  joinRoom(roomId: string = '1'){
     this.socket.emit('join', {room: roomId, peerUUID: this.localPeerId});
+  }
+
+  setUserName(name: string){
+    this.socket.emit('setUser', name);
   }
 
   distributeCards(players: PlayerComponent[]){
