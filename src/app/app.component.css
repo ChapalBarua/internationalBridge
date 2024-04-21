@@ -77,3 +77,8 @@
 button:hover {
     background-color: rgb(182, 230, 173);
 }
+
+.connectedUsers{
+    position: absolute;
+    left: 920px;
+}

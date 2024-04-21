@@ -102,3 +102,8 @@ export type socketUser = {
   name: string;
   orientation: Orientation;
 }
+
+export interface UserTracker { // this is the tracking data of all connected users and active users(joined in room/table)
+  connectedUsers : number,
+  activeUsers : number
+}

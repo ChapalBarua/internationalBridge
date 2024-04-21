@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { ToastrModule } from 'ngx-toastr';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CardComponent } from './card/card.component';
@@ -34,7 +34,10 @@ const config: SocketIoConfig = { url: 'https://localhost:3000', options: {} };
     MatFormFieldModule,
     ReactiveFormsModule,
     MatInputModule,
-    SocketIoModule.forRoot(config)
+    SocketIoModule.forRoot(config),
+    ToastrModule.forRoot({
+      positionClass :'toast-top-right'
+    })
   ],
   providers: [],
   bootstrap: [HomeComponent]

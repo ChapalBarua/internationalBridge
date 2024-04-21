@@ -36,6 +36,10 @@ import { Card, PlayedCard } from './types';
       Shuffle
     </button>
   </div>
+  <div class="connectedUsers">
+    Connected users to the server -{{ cardService.serverUsers.connectedUsers}}<br>
+    Active users to the server -{{ cardService.serverUsers.activeUsers }}
+  </div>
   `,
   styleUrls: ['./app.component.css']
 })
@@ -67,7 +71,13 @@ export class AppComponent implements OnInit, AfterViewInit, AfterContentInit{
     // after a shuffle button is pressed (coming from server) perform operations - clears table and distribute 52 cards to the players
     this.cardService.shuffle$.subscribe((cards: Card[])=>{
       this.clearTable();
-      console.log(cards);
+
+
+      //temporary tracker
+      this.playerOne.cards = cards;
+      this.playerTwo.cards = cards;
+      this.playerThree.cards = cards;
+      this.playerFour.cards = cards;
     })
 
     // after a card is played (coming from server)- perform operations
