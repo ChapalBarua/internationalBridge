@@ -86,12 +86,13 @@ export type tables = table[];
 
 export type table = {
   roomid: number,
-  players: {
+  cards: {
     top: Card[],
     bottom: Card[],
     left: Card[],
     right: Card[]
-  }
+  },
+  players: Players,
   currentRound: number, // running round out of 13 card set (4*13)
   completedGame: number, // how many games are completed
   currentSetColor: string,
@@ -107,3 +108,23 @@ export interface UserTracker { // this is the tracking data of all connected use
   connectedUsers : number,
   activeUsers : number
 }
+
+
+/**
+ * events appendix
+ * 
+ * connection events
+ * ----------------------------------------------------------------------------
+ * owner - actual client/browser
+ * room_created - event about creating and joining a room by the owner
+ * room_joined - event about joining an existing room by the owner
+ * 
+ * user_connected - event about any user connecting to server
+ * user_disconnected - event about any user disconnected from the server
+ * 
+ * user_active - listening to event about new user joined any room
+ * user_inactive - listening to event about any user leaving any room
+ * 
+ * user_joined_room - listening to event about new user has joined the same room
+ * user_left_room - listening to event about a user has left the same room
+ */

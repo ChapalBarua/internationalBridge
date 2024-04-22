@@ -11,7 +11,14 @@ import { NotificationService, NotificationType } from './notification.service';
 export class CardService {
   activePlayerOrientation!: Orientation; // active user orientation
   playerName = ''; // active user name
-  players! : Players;
+  private _players! : Players;
+  
+  set players(players: Players){
+    this._players = players;
+  }
+  get players(): Players{
+    return this._players;
+  }
   cardsOnTable: PlayedCard[] = [];
   localPeerId!: string;
 
@@ -19,9 +26,6 @@ export class CardService {
     activeUsers: 0,
     connectedUsers: 0
   };
-  // connectedUsers$ = new BehaviorSubject<number>(0);
-  // activeUsers$ = new BehaviorSubject<number>(0);
-
 
   playedCard$ = new BehaviorSubject<PlayedCard>({player: '', card: null});
   unPlayedCard$ = new BehaviorSubject<PlayedCard>({player: '', card: null});
@@ -30,36 +34,53 @@ export class CardService {
 
   constructor(private socket: Socket, private notificationService: NotificationService) {
 
-    // listening to event about creating and joining a room
+    // listening to event about creating and joining a room by the owner
     this.socket.on('room_created', this.onRoomCreated.bind(this));
 
     
-    // listening to event about joining an existing room
+    // listening to event about joining an existing room by the owner
     this.socket.fromEvent<RoomJoin>('room_joined').subscribe((event: RoomJoin)=>{
       console.log(`room ${event.roomId} joined - orientation ${event.orientation} - peer id-`, event.peerId);
       this.notificationService.sendMessage({message: `joined in room ${event.roomId}` , type: NotificationType.success});
       this.afterJoinRoom(event);
     });
 
-    // listening to event about new user connecting to server
+    // listening to event about any user connecting to server
     this.socket.fromEvent<UserTracker>('user_connected').subscribe((users: UserTracker)=>{
       this.setServerUsers(users);
     });
 
-    // listening to event about new user disconnected from the server
+    // listening to event about any user disconnected from the server
     this.socket.fromEvent<UserTracker>('user_disconnected').subscribe((users: UserTracker)=>{
       this.setServerUsers(users);
     });
+    
 
+    // listening to event about new user joined any room
+    this.socket.fromEvent<UserTracker>('user_active').subscribe((users: UserTracker)=>{
+      this.setServerUsers(users);
+    });
+
+    // listening to event about any user leaving any room
+    this.socket.fromEvent<UserTracker>('user_inactive').subscribe((users: UserTracker)=>{
+      this.setServerUsers(users);
+    });
     
 
     // listening to event about new user has joined the same room
     this.socket.on('user_joined_room',this.onNewUserJoinedRoom.bind(this));
 
+    // listening to event about a user has left the same room
+    this.socket.on('user_left_room',this.onUserLeftRoom.bind(this));
+
+
     // listening to event when card is distributed
     this.socket.fromEvent<Card[]>('distribute_cards').subscribe((cards: Card[])=>{
       this.shuffle$.next(cards);
     });
+
+
+    // implement capacity full 
   }
 
   /**
@@ -94,12 +115,22 @@ export class CardService {
   }
 
   /**
-   * function that executes after server notifies the active user that a new user joined the room
+   * function that executes after server notifies the owner that a new user joined the room
    * @param user - name of the new user who recently joined room (not the active user)
    * @param players - info about existing players in the table
    */
   onNewUserJoinedRoom(user: string, players: Players){
     this.notificationService.sendMessage({message: `user ${user} joined the room ` , type: NotificationType.info});
+    this.players = players;
+  }
+
+   /**
+   * function that executes after server notifies the owner that a user has left the room
+   * @param user - name of the user who left the room
+   * @param players - info about existing players in the table
+   */
+  onUserLeftRoom(user: string, players: Players){
+    this.notificationService.sendMessage({message: `user ${user} has left the room ` , type: NotificationType.info});
     this.players = players;
   }
 
