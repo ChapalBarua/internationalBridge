@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Card, Orientation, PlayedCard, Players, RoomJoin, UserTracker } from './types';
+import { Card, Orientation, PlayedCard, Players, RoomJoin, ShownCards, UserTracker } from './types';
 import { Socket } from 'ngx-socket-io';
 import { NotificationService, NotificationType } from './notification.service';
 
@@ -26,10 +26,19 @@ export class CardService {
     connectedUsers: 0
   };
 
+  shuffle$ = new BehaviorSubject<Card[]>([]);
+  showCards$ = new BehaviorSubject<ShownCards>({
+    cards: [],
+    user: '',
+    orientation: 'left'
+  }); 
+  
+  // sets open cards to a player 
   playedCard$ = new BehaviorSubject<PlayedCard>({player: '', card: null});
   unPlayedCard$ = new BehaviorSubject<PlayedCard>({player: '', card: null});
   roundComplete$ = new BehaviorSubject<boolean>(true);
-  shuffle$ = new BehaviorSubject<Card[]>([]);
+  
+
 
   constructor(private socket: Socket, private notificationService: NotificationService) {
 
@@ -81,6 +90,11 @@ export class CardService {
     // listening to event when card is distributed
     this.socket.fromEvent<Card[]>('distribute_cards').subscribe((cards: Card[])=>{
       this.shuffle$.next(cards);
+    });
+
+    // listening to event when card is distributed
+    this.socket.fromEvent<ShownCards>('show_cards').subscribe((cards: ShownCards)=>{
+      this.showCards$.next(cards);
     });
 
 
@@ -164,9 +178,6 @@ export class CardService {
 
   shuffleCard(){
     this.socket.emit('shuffleCard');
-  }
-
-  showCard(cards:Card[]){
   }
 
   /**

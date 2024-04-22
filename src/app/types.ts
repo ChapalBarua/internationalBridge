@@ -3,10 +3,26 @@ export interface PlayedCard {
   card: Card | null;
 }
 
-export type Card  = {
-  cardType: CardType,
-  cardValue: CardValue
+export interface Card   {
+  cardType: CardType | '',
+  cardValue: CardValue | ''
 };
+
+export const BlankCard: Card = {
+  cardType: '',
+  cardValue: ''
+}
+
+export const BlankSet: Card[] = new Array(13).fill(BlankCard);
+
+// function isCard(object: any): object is Card {
+//   return 'fooProperty' in object;
+// }
+
+// export interface FaceDownCard {};
+
+// export const BlankCard: FaceDownCard = {};
+// export const BlankSet = new Array(13).fill(BlankCard);
 
 export type Orientation = "left" | "right" | "top" | "bottom";
 
@@ -19,42 +35,6 @@ export type CardValue = typeof cardValues[number];
 export function generateImageUrl(card: Card): string{
     let imageUrl = "assets/svg-cards/" + card.cardValue + '_of_' + card.cardType + '.svg';
     return imageUrl;
-}
-
-export function getShuffledCardsDeck(): Card[]{
-
-  let res: Card[] = []; 
-    
-  for (let type of cardSuits) {
-      for (let value of cardValues) {
-        res.push({cardType: type, cardValue: value});
-      } 
-  } 
-    
-  for (let i = res.length - 1; i > 0; i--) { 
-      let j = Math.floor(Math.random() * (i + 1)); 
-      [res[i], res[j]] = [res[j], res[i]]; 
-  }
-
-  return wellDistributedDeck(res) ? res : getShuffledCardsDeck(); // checks for face card distribution
-}
-
-/**
- * 
- * @param cards 52 cards deck
- * @returns if 4 set of 13 cards all have face cards
- */
-export function wellDistributedDeck(cards: Card[]): boolean | undefined{
-  if(cards.length != 52) {
-    console.log('Full 52 cards deck is not provided');
-    return;
-  }
-  return checkFaceCard(cards.slice(0,13)) && checkFaceCard(cards.slice(13,26)) && checkFaceCard(cards.slice(26,39)) && checkFaceCard(cards.slice(39,52))
-}
-  
-export function checkFaceCard(cards: Card[]): boolean{
-  let faceCards = cards.filter(card=> cardValues.slice(9,13).includes(card.cardValue));
-  return faceCards.length > 0;
 }
 
 export function sortCards(cards: Card[]){
@@ -109,6 +89,12 @@ export interface UserTracker { // this is the tracking data of all connected use
   activeUsers : number
 }
 
+export interface ShownCards { // server broadcasts the shown cards to everyone in the room
+  user: string,
+  orientation: Orientation,
+  cards: Card[]
+}
+
 
 /**
  * events appendix
@@ -129,4 +115,11 @@ export interface UserTracker { // this is the tracking data of all connected use
  * user_left_room - listening to event about a user has left the same room
  * 
  * capacity_full - listening to event about the owner failed to join a room
+ * 
+ * 
+ * 
+ * card events
+ * ----------------------------------------------------------------------------------
+ * shuffle card - provides owner 13 cards for the owner - rest 39 cards are face down
+ * show_cards - provides 13 cards for a player to show (when a player shows card)
  */

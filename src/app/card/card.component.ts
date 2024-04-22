@@ -13,6 +13,9 @@ export class CardComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() orientation!: string;
   @Input() height: string = "55px";
   @Input() width: string = "50px";
+
+  faceDownCardUrl = "assets/svg-cards/face_down.png";
+
   imageUrl ='';
 
   constructor(private cardService: CardService){
@@ -28,7 +31,8 @@ export class CardComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   ngOnChanges(): void {
-    this.imageUrl = generateImageUrl(this.card);
+    
+    this.imageUrl = this.card.cardType ? generateImageUrl(this.card): this.faceDownCardUrl;
   }
 
   onClick(){

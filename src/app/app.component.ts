@@ -1,7 +1,7 @@
 import { AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { PlayerComponent } from './player/player.component';
 import { CardService } from './card.service';
-import { Card, PlayedCard } from './types';
+import { BlankSet, Card, PlayedCard, ShownCards } from './types';
 
 @Component({
   selector: 'app-root',
@@ -68,16 +68,20 @@ export class AppComponent implements OnInit, AfterViewInit, AfterContentInit{
 
   ngAfterViewInit(): void {
 
-    // after a shuffle button is pressed (coming from server) perform operations - clears table and distribute 52 cards to the players
+    // after a shuffle button is pressed (coming from server) perform operations - clears table, provide 13 cards to the owner, 39 face down cards to rest
     this.cardService.shuffle$.subscribe((cards: Card[])=>{
+      this.setBlankCardsToAll();
       this.clearTable();
+      if(cards.length){
+        this.playerOne.cards = cards;
+      }
+    })
 
-
-      //temporary tracker
-      this.playerOne.cards = cards;
-      this.playerTwo.cards = cards;
-      this.playerThree.cards = cards;
-      this.playerFour.cards = cards;
+    // show cards of the player
+    this.cardService.showCards$.subscribe((event: ShownCards)=>{
+      if(event.cards.length>0){
+        //this.playerOne.cards = cards;
+      }
     })
 
     // after a card is played (coming from server)- perform operations
@@ -131,6 +135,13 @@ export class AppComponent implements OnInit, AfterViewInit, AfterContentInit{
   ngAfterContentInit(): void {
   }
 
+  setBlankCardsToAll(){
+    this.playerOne.cards = BlankSet;
+    this.playerTwo.cards = BlankSet;
+    this.playerThree.cards = BlankSet;
+    this.playerFour.cards = BlankSet;
+  }
+
   /**
     * remove cards from table
   */
@@ -139,12 +150,8 @@ export class AppComponent implements OnInit, AfterViewInit, AfterContentInit{
     this.playerTwo.clearPlayedCard();
     this.playerThree.clearPlayedCard();
     this.playerFour.clearPlayedCard();
-    this.cardService.placeCardOnTable
     this.setundoAble(true);
   }
-
-
-
 
   /**
    * notify server after shuffle button is pressed
@@ -166,8 +173,5 @@ export class AppComponent implements OnInit, AfterViewInit, AfterContentInit{
   onDoneDeal(){
     this.cardService.finishRound();
   }
-
-
-
   
 }
