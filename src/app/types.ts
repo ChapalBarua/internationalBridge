@@ -127,4 +127,6 @@ export interface UserTracker { // this is the tracking data of all connected use
  * 
  * user_joined_room - listening to event about new user has joined the same room
  * user_left_room - listening to event about a user has left the same room
+ * 
+ * capacity_full - listening to event about the owner failed to join a room
  */

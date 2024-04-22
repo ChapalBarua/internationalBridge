@@ -1,7 +1,6 @@
-import { Injectable, OnInit } from '@angular/core';
-import { PlayerComponent } from './player/player.component';
-import { BehaviorSubject, Observable, map } from 'rxjs';
-import { Card, Orientation, PlayedCard, Players, RoomJoin, getShuffledCardsDeck, UserTracker } from './types';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { Card, Orientation, PlayedCard, Players, RoomJoin, UserTracker } from './types';
 import { Socket } from 'ngx-socket-io';
 import { NotificationService, NotificationType } from './notification.service';
 
@@ -73,6 +72,11 @@ export class CardService {
     // listening to event about a user has left the same room
     this.socket.on('user_left_room',this.onUserLeftRoom.bind(this));
 
+     // listening to event when owner fails to join because the room is full
+     this.socket.fromEvent<UserTracker>('capacity_full').subscribe(()=>{
+      this.notificationService.sendMessage({message: `Failed to join - the room is full` , type: NotificationType.error});
+    });
+
 
     // listening to event when card is distributed
     this.socket.fromEvent<Card[]>('distribute_cards').subscribe((cards: Card[])=>{
@@ -99,7 +103,7 @@ export class CardService {
    * 
    */
   joinRoom(roomId: string, userName: string){
-    this.playerName = userName;
+    
     this.socket.emit('join', {room: roomId, peerUUID: this.localPeerId, userName: userName});
   }
 
@@ -138,6 +142,7 @@ export class CardService {
    * when server notifies a user - about joining a room - user sets up local environment
    */
   afterJoinRoom(event: RoomJoin){
+    this.playerName = event.user;
     this.players = event.players;
     this.localPeerId = event.peerId;
     this.activePlayerOrientation = event.orientation;
