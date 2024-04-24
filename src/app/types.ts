@@ -1,5 +1,5 @@
 export interface PlayedCard {
-  player: string;
+  serial: Serial;
   card: Card | null;
 }
 
@@ -25,6 +25,7 @@ export const BlankSet: Card[] = new Array(13).fill(BlankCard);
 // export const BlankSet = new Array(13).fill(BlankCard);
 
 export type Orientation = "left" | "right" | "top" | "bottom";
+export type Serial = "two" | "four" | "three" | "one";
 
 const cardSuits = ['diamonds', 'clubs', 'hearts', 'spades'] as const;
 export type CardType = typeof cardSuits[number];
@@ -49,16 +50,23 @@ export interface RoomJoin {
   roomId: string,
   peerId: string,
   user: string,
-  orientation: Orientation,
-  players: Players
+  serial: Serial, // player identity - 1/2/3/4
+  players: SerialNameMapping
 }
 
-export interface Players {
-  bottom: '',
-  left: '',
-  top: '',
-  right: ''
+export interface SerialNameMapping {
+  one: string,
+  two: string,
+  three: string,
+  four: string
 }
+
+export interface OrientationSerialMapping {
+  bottom: Serial,
+  left: Serial,
+  top: Serial,
+  right: Serial
+} 
 
 // will be used by server
 
@@ -67,21 +75,21 @@ export type tables = table[];
 export type table = {
   roomid: number,
   cards: {
-    top: Card[],
-    bottom: Card[],
-    left: Card[],
-    right: Card[]
+    one: Card[],
+    two: Card[],
+    three: Card[],
+    four: Card[]
   },
-  players: Players,
+  players: SerialNameMapping,
   currentRound: number, // running round out of 13 card set (4*13)
   completedGame: number, // how many games are completed
   currentSetColor: string,
-  whoSetColor: string //('top', 'bottom', 'left', 'right')
+  whoSetColor: string //('one', 'two', 'three', 'four')
 }
 
 export type socketUser = {
   name: string;
-  orientation: Orientation;
+  serial: Serial;
 }
 
 export interface UserTracker { // this is the tracking data of all connected users and active users(joined in room/table)
@@ -91,7 +99,7 @@ export interface UserTracker { // this is the tracking data of all connected use
 
 export interface ShownCards { // server broadcasts the shown cards to everyone in the room
   user: string,
-  orientation: Orientation,
+  serial: Serial,
   cards: Card[]
 }
 
@@ -116,10 +124,13 @@ export interface ShownCards { // server broadcasts the shown cards to everyone i
  * 
  * capacity_full - listening to event about the owner failed to join a room
  * 
+ * played_card - listening to event when server notifies a particular card is played
+ * 
  * 
  * 
  * card events
  * ----------------------------------------------------------------------------------
  * shuffle card - provides owner 13 cards for the owner - rest 39 cards are face down
  * show_cards - provides 13 cards for a player to show (when a player shows card)
+ * playCard - send info to server that serial 1/2/3/4 has played a particular card
  */

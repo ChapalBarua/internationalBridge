@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { CardService } from '../card.service';
 
 @Component({
@@ -16,7 +16,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.loginForm = this.fb.group({
-      name: ['', [Validators.required]],
+      name: ['', [Validators.required, nameValidator]],
       roomId: ['', Validators.required],
     });
   }
@@ -25,3 +25,12 @@ export class HomeComponent implements OnInit {
     this.cardService.joinRoom(this.loginForm.get('roomId')?.value, this.loginForm.get('name')?.value);
   }
 }
+
+function nameValidator(control: AbstractControl): ValidationErrors | null{
+  if(avoidableNames.includes(control.value.toLowerCase())){
+    return {
+      invalidName: {message: "Invalid User Name"}
+    };
+  } else return null;
+}
+const avoidableNames = ["player one", "player two", "player three", "player four", "user one", "user two", "user three", "user four" ];

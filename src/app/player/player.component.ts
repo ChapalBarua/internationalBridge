@@ -1,5 +1,5 @@
 import { AfterContentChecked, ChangeDetectorRef, Component, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { Card, CardType, CardValue, Orientation, sortCards } from '../types';
+import { BlankCard, Card, CardType, CardValue, Orientation, Serial, sortCards } from '../types';
 
 @Component({
   selector: 'app-player',
@@ -7,12 +7,24 @@ import { Card, CardType, CardValue, Orientation, sortCards } from '../types';
   styleUrls: ['./player.component.css']
 })
 export class PlayerComponent implements OnInit, AfterContentChecked {
+  _cardShown = false; // indicates if this player has cards face up
+
+  public get cardShown(): boolean {
+    return this._cardShown
+  }
+
+  public set cardShown(willShowCards: boolean){
+    this._cardShown = willShowCards;
+  }
 
   @Input()
   orientation!: Orientation;
 
   @Input()
-  activePlayer!: Orientation;
+  serial!: Serial;
+
+  // @Input()
+  // activePlayer!: Orientation;
 
   // played card by a player
   private _playedCard!: Card | null;
@@ -46,8 +58,14 @@ export class PlayerComponent implements OnInit, AfterContentChecked {
   */
   public playCard(playedCard: Card){
     if(!this.validateCard()) return;
-    this.cards = this.cards.filter(card=> card.cardType != playedCard.cardType || card.cardValue!= playedCard.cardValue);
+
     this.setPlayedCard(playedCard);
+
+    if(this.cardShown){
+      this.cards = this.cards.filter(card=> card.cardType != playedCard.cardType || card.cardValue!= playedCard.cardValue);
+    }else {
+      this.cards.pop();
+    }
   }
 
   // logic if want to validate card played by user
@@ -60,9 +78,12 @@ export class PlayerComponent implements OnInit, AfterContentChecked {
    * @param playedCard - takes back a card from board to hand
  */
   public unplayCard(playedCard: Card){
-    this.cards = sortCards(this.cards.concat(playedCard));
     this.clearPlayedCard();
-    
+    if(this.cardShown){
+      this.cards = sortCards(this.cards.concat(playedCard));
+    }else {
+      this.cards = sortCards(this.cards.concat(BlankCard));
+    }
   }
 
   /**

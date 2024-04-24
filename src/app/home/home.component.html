@@ -1,4 +1,4 @@
-<ng-container *ngIf="!cardService.playerName">
+<ng-container *ngIf="!cardService.localPeerId">
   <div class="authentication-card-container pt-3" fxLayout="column" fxLayoutAlign="center">
     <mat-card class="authentication-card">
       <mat-card-header> <mat-card-title>Join A Bridge Room</mat-card-title></mat-card-header>
@@ -27,9 +27,6 @@
   </div>
 </ng-container>
 
-
-
-
-<ng-container *ngIf="cardService.playerName">
+<ng-container *ngIf="cardService.localPeerId">
     <app-root></app-root>
 </ng-container>

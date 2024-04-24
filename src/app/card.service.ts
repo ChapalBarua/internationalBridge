@@ -1,23 +1,63 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { Card, Orientation, PlayedCard, Players, RoomJoin, ShownCards, UserTracker } from './types';
+import { BehaviorSubject, Subject, of } from 'rxjs';
+import { Card, Serial, PlayedCard, SerialNameMapping, RoomJoin, ShownCards, UserTracker, Orientation, OrientationSerialMapping } from './types';
 import { Socket } from 'ngx-socket-io';
 import { NotificationService, NotificationType } from './notification.service';
+import { Dictionary } from 'lodash';
+import * as _ from 'lodash';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CardService {
-  activePlayerOrientation!: Orientation; // active user orientation
-  playerName = ''; // active user name
-  private _players! : Players;
+  activePlayerSerial: Serial = "one"; // active user serial - one/two/thre/four
+
+  private _activePlayerName : string = 'player one'; // active user name
+  get activePlayerName(): string{
+    return this._activePlayerName;
+  }
+  set activePlayerName(playerName: string){
+    this._activePlayerName = playerName;
+    localStorage.setItem('userName', playerName);
+  }
+
+  private _players : SerialNameMapping = { // serial -> name mapping
+    one : 'player one',
+    two: 'player two',
+    three: 'player three',
+    four: 'player four'
+  };
   
-  set players(players: Players){
+  set players(players: SerialNameMapping){
     this._players = players;
   }
-  get players(): Players{
+  get players(): SerialNameMapping{
     return this._players;
   }
+
+  private _orientationToSerialMapping : OrientationSerialMapping= {
+    bottom: 'one',
+    left: 'two',
+    top: 'three',
+    right: 'four' 
+  }
+
+  get orientationToSerialMapping(): OrientationSerialMapping{
+    return this._orientationToSerialMapping
+  }
+
+  set orientationToSerialMapping(map:  OrientationSerialMapping){
+    this._orientationToSerialMapping = map;
+    this.serialToOrientationMapping = _.invert(this.orientationToSerialMapping);
+  }
+
+  serialToOrientationMapping: Dictionary<string> = {
+    one: 'bottom',
+    two: 'left',
+    three: 'top',
+    four: 'right'
+  };
+
   cardsOnTable: PlayedCard[] = [];
   localPeerId!: string;
 
@@ -27,18 +67,19 @@ export class CardService {
   };
 
   shuffle$ = new BehaviorSubject<Card[]>([]);
-  showCards$ = new BehaviorSubject<ShownCards>({
+  showCards$ = new BehaviorSubject<ShownCards>({  // sets open cards to a player 
     cards: [],
     user: '',
-    orientation: 'left'
+    serial: 'one'
   }); 
   
-  // sets open cards to a player 
-  playedCard$ = new BehaviorSubject<PlayedCard>({player: '', card: null});
-  unPlayedCard$ = new BehaviorSubject<PlayedCard>({player: '', card: null});
+ 
+  playedCard$ = new BehaviorSubject<PlayedCard>({serial: 'one', card: null});
+  unPlayedCard$ = new BehaviorSubject<PlayedCard>({serial: 'one', card: null});
   roundComplete$ = new BehaviorSubject<boolean>(true);
-  
 
+  onOwnerJoiningRoom$: BehaviorSubject<boolean> = new BehaviorSubject(true);
+  onRoomUsersChange$: BehaviorSubject<boolean>  = new BehaviorSubject(true); // notifies others when a user enters leaves room
 
   constructor(private socket: Socket, private notificationService: NotificationService) {
 
@@ -48,7 +89,7 @@ export class CardService {
     
     // listening to event about joining an existing room by the owner
     this.socket.fromEvent<RoomJoin>('room_joined').subscribe((event: RoomJoin)=>{
-      console.log(`room ${event.roomId} joined - orientation ${event.orientation} - peer id-`, event.peerId);
+      console.log(`room ${event.roomId} joined - serial ${event.serial} - peer id-`, event.peerId);
       this.notificationService.sendMessage({message: `joined in room ${event.roomId}` , type: NotificationType.success});
       this.afterJoinRoom(event);
     });
@@ -87,12 +128,22 @@ export class CardService {
     });
 
 
-    // listening to event when card is distributed
+    // listening to event when card is distributed 
     this.socket.fromEvent<Card[]>('distribute_cards').subscribe((cards: Card[])=>{
       this.shuffle$.next(cards);
     });
 
-    // listening to event when card is distributed
+    // listening to event when a card is played
+    this.socket.fromEvent<PlayedCard>('played_card').subscribe((card: PlayedCard)=>{
+      this.playedCard$.next(card);
+    });
+
+    // listening to event when a card is unplayed
+    this.socket.fromEvent<PlayedCard>('unplayed_card').subscribe((card: PlayedCard)=>{
+      this.unPlayedCard$.next(card);
+    });
+
+    // listening to event when asked to show cards
     this.socket.fromEvent<ShownCards>('show_cards').subscribe((cards: ShownCards)=>{
       this.showCards$.next(cards);
     });
@@ -101,13 +152,7 @@ export class CardService {
     // implement capacity full 
   }
 
-  /**
-   * keeps track of connected users to the server
-   * @param users 
-   */
-  setServerUsers(users: UserTracker){
-    this.serverUsers= users;
-  }
+  ///////////////// instruction to server functions //////////////////////////////////////////
 
   /**
    * notifies the server that users wants to join a particular room
@@ -120,14 +165,50 @@ export class CardService {
     
     this.socket.emit('join', {room: roomId, peerUUID: this.localPeerId, userName: userName});
   }
+  
+  /**
+   * asks the server to shuffle card
+   */
+  shuffleCard(){
+    this.socket.emit('shuffleCard');
+  }
 
 
   /**
+   * notifies server that the user has played one particular card
+   */
+
+  playCard(playedCard: PlayedCard){
+    this.socket.emit('playCard', playedCard);
+  }
+
+  /**
+   * notifies server that the user has unplayed one particular card
+   */
+  unPlayCard(){
+    this.socket.emit('unplayCard', this.playedCard$.value);
+  }
+
+  
+
+
+///////////////////////// general funstions /////////////////////////////////////////
+
+  /**
+   * keeps track of connected users to the server
+   * @param users 
+   */
+    setServerUsers(users: UserTracker){
+      this.serverUsers= users;
+    }
+  
+
+  /**
    * function that executes after server notifies the active user that he successfully joined the room
-   * @param event provides information to the new user about his orientation and other users in table
+   * @param event provides information to the new user about his serial and other users in table
    */
   onRoomCreated(event: RoomJoin){
-    console.log(`room ${event.roomId} created - orientation ${event.orientation} - peer id-`, event.peerId);
+    console.log(`room ${event.roomId} created - serial ${event.serial} - peer id-`, event.peerId);
     this.notificationService.sendMessage({message: `room ${event.roomId} created and joined ` , type: NotificationType.success});
     this.afterJoinRoom(event);
   }
@@ -137,9 +218,10 @@ export class CardService {
    * @param user - name of the new user who recently joined room (not the active user)
    * @param players - info about existing players in the table
    */
-  onNewUserJoinedRoom(user: string, players: Players){
+  onNewUserJoinedRoom(user: string, players: SerialNameMapping){
     this.notificationService.sendMessage({message: `user ${user} joined the room ` , type: NotificationType.info});
     this.players = players;
+    this.onRoomUsersChange$.next(true);
   }
 
    /**
@@ -147,37 +229,29 @@ export class CardService {
    * @param user - name of the user who left the room
    * @param players - info about existing players in the table
    */
-  onUserLeftRoom(user: string, players: Players){
+  onUserLeftRoom(user: string, players: SerialNameMapping){
     this.notificationService.sendMessage({message: `user ${user} has left the room ` , type: NotificationType.info});
     this.players = players;
+    this.onRoomUsersChange$.next(true);
   }
 
   /**
-   * when server notifies a user - about joining a room - user sets up local environment
+   * when server notifies a user(owner) - about joining a room - user sets up local environment
    */
   afterJoinRoom(event: RoomJoin){
-    this.playerName = event.user;
+    console.log('owner joined-',event);
+    this.activePlayerName = event.user;
     this.players = event.players;
     this.localPeerId = event.peerId;
-    this.activePlayerOrientation = event.orientation;
-    localStorage.setItem('orientation', event.orientation);
+    this.activePlayerSerial = event.serial;
+    localStorage.setItem('serial', event.serial);
     localStorage.setItem('roomId', event.roomId);
-  }
-
-  playCard(playedCard: PlayedCard){
-    this.playedCard$.next(playedCard);
-  }
-
-  unPlayCard(card?: PlayedCard){
-    this.unPlayedCard$.next(card ?? this.playedCard$.value);
+    this.calculateOrientationToSerialMapping();
+    this.onOwnerJoiningRoom$.next(true);
   }
 
   finishRound(){
     this.roundComplete$.next(true);
-  }
-
-  shuffleCard(){
-    this.socket.emit('shuffleCard');
   }
 
   /**
@@ -198,4 +272,26 @@ export class CardService {
     this.cardsOnTable = this.cardsOnTable.filter(playedCard=>playedCard.card?.cardType != removableCard.card?.cardType || playedCard.card?.cardValue != removableCard.card?.cardValue);
   }
 
+  getNameFromSerial (serial: Serial){
+    return this.players[serial];
+  }
+
+  calculateOrientationToSerialMapping(){
+    let serials: Serial[] = ["one", "two", "three", "four"];
+    let names: string[] = [this.players["one"], this.players["two"], this.players["three"], this.players["four"]];
+    
+    while(serials[0]!=this.activePlayerSerial){ // rotating the arrays until active player comes at the first position
+      serials.push(<Serial>serials.shift());
+      names.push(<string>names.shift());
+    }
+
+    let newOrientationToSerialMapping: OrientationSerialMapping = {
+      bottom: serials[0],
+      left: serials[1],
+      top: serials[2],
+      right: serials[3] 
+    }
+
+    this.orientationToSerialMapping = newOrientationToSerialMapping;
+  }
 }
