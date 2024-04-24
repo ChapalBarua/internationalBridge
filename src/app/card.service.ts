@@ -60,6 +60,7 @@ export class CardService {
 
   cardsOnTable: PlayedCard[] = [];
   localPeerId!: string;
+  roomId!: string;
 
   serverUsers: UserTracker = {
     activeUsers: 0,
@@ -82,6 +83,19 @@ export class CardService {
   onRoomUsersChange$: BehaviorSubject<boolean>  = new BehaviorSubject(true); // notifies others when a user enters leaves room
 
   constructor(private socket: Socket, private notificationService: NotificationService) {
+
+    // when the owner is connected to the server
+    this.socket.on("connect", () => {
+      this.notificationService.sendMessage({message: `Connected. Welcome to the Card Game Website` , type: NotificationType.info});
+      console.log('connected to the server');
+    });
+    
+    this.socket.on("disconnect", () => {
+      this.notificationService.sendMessage({message: `Unfortunately you got disconnected from the server` , type: NotificationType.info});
+      this.localPeerId = '';
+      this.roomId = '';
+      console.log('disconnected from the server');
+    });
 
     // listening to event about creating and joining a room by the owner
     this.socket.on('room_created', this.onRoomCreated.bind(this));
@@ -162,7 +176,7 @@ export class CardService {
    * 
    */
   joinRoom(roomId: string, userName: string){
-    
+    if(this.roomId) return;
     this.socket.emit('join', {room: roomId, peerUUID: this.localPeerId, userName: userName});
   }
   
@@ -243,6 +257,7 @@ export class CardService {
     this.activePlayerName = event.user;
     this.players = event.players;
     this.localPeerId = event.peerId;
+    this.roomId = event.peerId;
     this.activePlayerSerial = event.serial;
     localStorage.setItem('serial', event.serial);
     localStorage.setItem('roomId', event.roomId);
