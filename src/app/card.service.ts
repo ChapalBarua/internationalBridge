@@ -71,7 +71,6 @@ export class CardService {
   shuffle$ = new BehaviorSubject<Card[]>([]);
   showCards$ = new BehaviorSubject<ShownCards>({  // sets open cards to a player 
     cards: [],
-    user: '',
     serial: 'one'
   }); 
   

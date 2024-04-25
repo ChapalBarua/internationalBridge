@@ -1,7 +1,7 @@
 export interface PlayedCard {
   serial: Serial;
   card: Card | null;
-  next?: Serial // may indicate who will play next
+  next?: NextPlay // may indicate who will play next
 }
 
 export interface Card   {
@@ -106,7 +106,8 @@ export type table = {
     team2: number,
     setsTakenByTeam1: number,
     setsTakenByTeam2: number
-  }
+  },
+  cardHistory: [Card[]] // keep track of cards 13 * 4 cards for a running game
 }
 
 // information about who will play next and which cards
@@ -133,7 +134,6 @@ export interface UserTracker { // this is the tracking data of all connected use
 }
 
 export interface ShownCards { // server broadcasts the shown cards to everyone in the room
-  user: string,
   serial: Serial,
   cards: Card[]
 }
