@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject, of } from 'rxjs';
-import { Card, Serial, PlayedCard, SerialNameMapping, RoomJoin, ShownCards, UserTracker, Orientation, OrientationSerialMapping } from './types';
+import { Card, Serial, PlayedCard, SerialNameMapping, RoomJoin, ShownCards, UserTracker, Orientation, OrientationSerialMapping, CallInfo, NextPlay } from './types';
 import { Socket } from 'ngx-socket-io';
 import { NotificationService, NotificationType } from './notification.service';
 import { Dictionary } from 'lodash';
@@ -67,6 +67,7 @@ export class CardService {
     connectedUsers: 0
   };
 
+  canShuffle$ = new BehaviorSubject<boolean>(false);
   shuffle$ = new BehaviorSubject<Card[]>([]);
   showCards$ = new BehaviorSubject<ShownCards>({  // sets open cards to a player 
     cards: [],
@@ -78,6 +79,7 @@ export class CardService {
   playedCard$ = new BehaviorSubject<PlayedCard>({serial: 'one', card: null});
   unPlayedCard$ = new BehaviorSubject<PlayedCard>({serial: 'one', card: null});
   roundComplete$ = new BehaviorSubject<boolean>(true);
+  nextPlayer$ = new BehaviorSubject<NextPlay | null>(null);
 
   onOwnerJoiningRoom$: BehaviorSubject<boolean> = new BehaviorSubject(true);
   onRoomUsersChange$: BehaviorSubject<boolean>  = new BehaviorSubject(true); // notifies others when a user enters leaves room
@@ -147,6 +149,13 @@ export class CardService {
       this.shuffle$.next(cards);
     });
 
+    // listening to announcement of next player to play
+
+    this.socket.fromEvent<NextPlay>('next_player').subscribe((nextPlay: NextPlay)=>{
+      this.notificationService.sendMessage({message: `Player ${this.players[nextPlay.nextPlayer]}'s turn` , type: NotificationType.success});
+      this.nextPlayer$.next(nextPlay);
+    });
+
     // listening to event when a card is played
     this.socket.fromEvent<PlayedCard>('played_card').subscribe((card: PlayedCard)=>{
       this.playedCard$.next(card);
@@ -162,8 +171,10 @@ export class CardService {
       this.showCards$.next(cards);
     });
 
-
-    // implement capacity full 
+    // can_shuffle
+    this.socket.fromEvent<boolean>('can_shuffle').subscribe((canShuffle: boolean)=>{
+      this.canShuffle$.next(canShuffle);
+    });
   }
 
   ///////////////// instruction to server functions //////////////////////////////////////////
@@ -202,6 +213,16 @@ export class CardService {
   unPlayCard(){
     this.socket.emit('unplayCard', this.playedCard$.value);
   }
+
+  /**
+   * notifies server about the decided call
+   */
+
+  onDecidedCall(decidedCall: CallInfo){
+    this.socket.emit('callDecided', decidedCall);
+  }
+
+
 
   
 

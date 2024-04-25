@@ -21,6 +21,9 @@ export class PlayerComponent implements OnInit, AfterContentChecked {
   orientation!: Orientation;
 
   @Input()
+  active = false; // indicates if these cards can be played
+
+  @Input()
   serial!: Serial;
 
   // @Input()

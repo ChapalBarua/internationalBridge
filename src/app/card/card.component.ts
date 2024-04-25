@@ -15,6 +15,7 @@ export class CardComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() serial!: Serial;
   @Input() height: string = "55px";
   @Input() width: string = "50px";
+  @Input() active = false;
 
   faceDownCardUrl = "assets/svg-cards/face_down.png";
 
@@ -40,6 +41,7 @@ export class CardComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   onClick(){
+    if(!this.active) return;
     this.cardService.playCard({ serial: this.serial, card: this.card});
   }
 }

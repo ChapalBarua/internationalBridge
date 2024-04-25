@@ -1,6 +1,7 @@
 export interface PlayedCard {
   serial: Serial;
   card: Card | null;
+  next?: Serial // may indicate who will play next
 }
 
 export interface Card   {
@@ -28,6 +29,8 @@ export type Orientation = "left" | "right" | "top" | "bottom";
 export type Serial = "two" | "four" | "three" | "one";
 
 const cardSuits = ['diamonds', 'clubs', 'hearts', 'spades'] as const;
+
+
 export type CardType = typeof cardSuits[number];
 
 const cardValues = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king', 'ace'] as const;
@@ -70,6 +73,13 @@ export interface OrientationSerialMapping {
 
 // will be used by server
 
+// details about call
+export interface CallInfo {
+  color: string,
+  call: number,
+  personCalled: Serial
+}
+
 export type tables = table[];
 
 export type table = {
@@ -81,10 +91,35 @@ export type table = {
     four: Card[]
   },
   players: SerialNameMapping,
+  cardsOnTable: Card[], // list of played cards in current round,
+  cardShown: boolean, // indicates if second player has already shown cards or not
   currentRound: number, // running round out of 13 card set (4*13)
   completedGame: number, // how many games are completed
   currentSetColor: string,
-  whoSetColor: string //('one', 'two', 'three', 'four')
+  whoSetColor: Serial, //('one', 'two', 'three', 'four')
+  whoShowCards: Serial, // ('one', 'two', 'three', 'four')
+  currentCall: number, // 1,2,3,4,5,6,7
+  whoPlayNext: string, // 'one','two','three','four,'
+  usersOnTable: number, // how many users are currently on the table
+  currentPoints: { // one + three = team 1, two + four = team2
+    team1: number,
+    team2: number,
+    setsTakenByTeam1: number,
+    setsTakenByTeam2: number
+  }
+}
+
+// information about who will play next and which cards
+export interface NextPlay {
+  nextPlayer: Serial, // pllayer one/two/three/four will play
+  nextCards: Serial // serial one/two/three/four cards will play (based on shown cards)
+}
+
+export const NextPlayer = { // helper object to decide who will play next
+  one: 'two',
+  two: 'three',
+  three: 'four',
+  four: 'one'
 }
 
 export type socketUser = {

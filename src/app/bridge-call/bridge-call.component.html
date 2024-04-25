@@ -1,0 +1,35 @@
+<h2 mat-dialog-title>Select Finalized Call</h2>
+<mat-dialog-content>
+    <form [formGroup]="selectCall" fxLayout="column" fxLayoutAlign="center">
+        <div>
+            <mat-form-field>
+                <mat-label>Selected Color</mat-label>
+                <mat-select formControlName="color">
+                    <mat-option *ngFor="let color of CallColorOptions" [value]="color.value">{{color.name}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div>
+            <mat-form-field>
+                <mat-label>Selected Call</mat-label>
+                <mat-select formControlName="call">
+                    <mat-option *ngFor="let callValue of CallValueOptions" [value]="callValue.value">{{callValue.name}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        
+        <div>
+            <mat-form-field>
+                <mat-label>Who Called</mat-label>
+                <mat-select formControlName="personCalled">
+                    <mat-option *ngFor="let caller of callerOptions" [value]="caller.serial">{{caller.name}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="selectCall.value" cdkFocusInitial>Ok</button>
+</mat-dialog-actions>

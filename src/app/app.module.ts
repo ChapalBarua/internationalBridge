@@ -14,6 +14,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
+import {MatDialogModule} from '@angular/material/dialog';
+import { BridgeCallComponent } from './bridge-call/bridge-call.component';
+import { MatSelectModule } from '@angular/material/select';
 
 const config: SocketIoConfig = { url: 'https://localhost:3000', options: {} };
 
@@ -22,7 +25,8 @@ const config: SocketIoConfig = { url: 'https://localhost:3000', options: {} };
     AppComponent,
     CardComponent,
     PlayerComponent,
-    HomeComponent
+    HomeComponent,
+    BridgeCallComponent
   ],
   imports: [
     BrowserModule,
@@ -34,6 +38,8 @@ const config: SocketIoConfig = { url: 'https://localhost:3000', options: {} };
     MatFormFieldModule,
     ReactiveFormsModule,
     MatInputModule,
+    MatSelectModule,
+    MatDialogModule,
     SocketIoModule.forRoot(config),
     ToastrModule.forRoot({
       positionClass :'toast-top-right'
