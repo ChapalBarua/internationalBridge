@@ -42,6 +42,6 @@ export class CardComponent implements OnInit, AfterViewInit, OnChanges {
 
   onClick(){
     if(!this.active) return;
-    this.cardService.playCard({ serial: this.serial, card: this.card});
+    this.cardService.playCard({ serial: this.serial, card: this.card, playedBy: this.cardService.activePlayerSerial});
   }
 }

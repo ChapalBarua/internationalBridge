@@ -1,6 +1,7 @@
 export interface PlayedCard {
-  serial: Serial;
+  serial: Serial; // this card belongs to whom
   card: Card | null;
+  playedBy: Serial;
   next?: NextPlay // may indicate who will play next
 }
 
@@ -14,16 +15,9 @@ export const BlankCard: Card = {
   cardValue: ''
 }
 
-export const BlankSet: Card[] = new Array(13).fill(BlankCard);
-
-// function isCard(object: any): object is Card {
-//   return 'fooProperty' in object;
-// }
-
-// export interface FaceDownCard {};
-
-// export const BlankCard: FaceDownCard = {};
-// export const BlankSet = new Array(13).fill(BlankCard);
+export function getBlankSet():Card[]{
+  return new Array(13).fill(BlankCard); 
+}
 
 export type Orientation = "left" | "right" | "top" | "bottom";
 export type Serial = "two" | "four" | "three" | "one";
@@ -141,10 +135,16 @@ export interface ShownCards { // server broadcasts the shown cards to everyone i
 
 /**
  * events appendix
+ * ----------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------
  * 
- * connection events
+ * connection events (server to client)
  * ----------------------------------------------------------------------------
  * owner - actual client/browser
+ * 
+ * connect - event about the owner has connected to the server
+ * disconnect - event about the owner has disconnected from the server
+ * 
  * room_created - event about creating and joining a room by the owner
  * room_joined - event about joining an existing room by the owner
  * 
@@ -159,13 +159,30 @@ export interface ShownCards { // server broadcasts the shown cards to everyone i
  * 
  * capacity_full - listening to event about the owner failed to join a room
  * 
- * played_card - listening to event when server notifies a particular card is played
  * 
- * 
- * 
- * card events
+ * card events (server to client)
  * ----------------------------------------------------------------------------------
- * shuffle card - provides owner 13 cards for the owner - rest 39 cards are face down
+ * shuffleCard- provides owner 13 cards for the owner - rest 39 cards are face down
  * show_cards - provides 13 cards for a player to show (when a player shows card)
- * playCard - send info to server that serial 1/2/3/4 has played a particular card
+ * 
+ * distribute_cards -listening to event when card is distributed 
+ * 
+ * next_player - listening to announcement of next player to play
+ * 
+ * played_card - listening to event when server notifies a particular card is played
+ * unplayed_card - listening to event when a card is unplayed
+ * 
+ * can_shuffle - listening to event when can be shuffled
+ * 
+ * 
+ * 
+ * client to server
+ * ------------------------------------------------
+ * join - notifies the server that users wants to join a particular room
+ * shuffleCard -asks the server to shuffle card
+ * playCard - send info to server that user serial 1/2/3/4 has played a particular card
+ * unplayCard - notifies server that the user has unplayed one particular card
+ * callDecided - notifies server about the decided call
+ * roundComplete - notifies server that current round is complete
+ * 
  */

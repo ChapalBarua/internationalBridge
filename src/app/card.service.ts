@@ -11,6 +11,7 @@ import * as _ from 'lodash';
 })
 export class CardService {
   activePlayerSerial: Serial = "one"; // active user serial - one/two/thre/four
+  public undoAble = false; // flag for undoing last move
 
   private _activePlayerName : string = 'player one'; // active user name
   get activePlayerName(): string{
@@ -75,8 +76,8 @@ export class CardService {
   }); 
   
  
-  playedCard$ = new BehaviorSubject<PlayedCard>({serial: 'one', card: null});
-  unPlayedCard$ = new BehaviorSubject<PlayedCard>({serial: 'one', card: null});
+  playedCard$ = new BehaviorSubject<PlayedCard>({serial: 'one', card: null, playedBy: 'one'});
+  unPlayedCard$ = new BehaviorSubject<PlayedCard>({serial: 'one', card: null, playedBy: 'one'});
   roundComplete$ = new BehaviorSubject<boolean>(true);
   nextPlayer$ = new BehaviorSubject<NextPlay | null>(null);
 
@@ -197,7 +198,6 @@ export class CardService {
     this.socket.emit('shuffleCard');
   }
 
-
   /**
    * notifies server that the user has played one particular card
    */
@@ -221,12 +221,14 @@ export class CardService {
     this.socket.emit('callDecided', decidedCall);
   }
 
+  /**
+   * notifies server that current round is complete
+   */
+  finishRound(){
+    this.socket.emit('roundComplete');
+  }
 
-
-  
-
-
-///////////////////////// general funstions /////////////////////////////////////////
+///////////////////////// general functions /////////////////////////////////////////
 
   /**
    * keeps track of connected users to the server
@@ -283,10 +285,6 @@ export class CardService {
     localStorage.setItem('roomId', event.roomId);
     this.calculateOrientationToSerialMapping();
     this.onOwnerJoiningRoom$.next(true);
-  }
-
-  finishRound(){
-    this.roundComplete$.next(true);
   }
 
   /**

@@ -1,7 +1,7 @@
 import { AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { PlayerComponent } from './player/player.component';
 import { CardService } from './card.service';
-import { BlankSet, CallInfo, Card, NextPlay, Orientation, PlayedCard, Serial, SerialNameMapping, ShownCards } from './types';
+import { CallInfo, Card, NextPlay, Orientation, PlayedCard, Serial, SerialNameMapping, ShownCards, getBlankSet } from './types';
 import * as _ from 'lodash';
 import { MatDialog } from '@angular/material/dialog';
 import { BridgeCallComponent } from './bridge-call/bridge-call.component';
@@ -29,10 +29,10 @@ import { BridgeCallComponent } from './bridge-call/bridge-call.component';
       <div class="right-player-name">{{playerRightName}}</div>
       <app-player #playerRight [orientation]="'right'" [serial]="playerRightSerial" [active]="activeCardsSerial===playerRightSerial"></app-player>
     </div>
-    <button mat-raised-button   class="roundCompleteButton" [disabled]="!canCompleteRound" (click)="onDoneDeal()">
+    <button mat-raised-button   class="roundCompleteButton" *ngIf="cardService.activePlayerSerial==='one'" [disabled]="!canCompleteRound" (click)="onDoneDeal()">
       Round Complete
     </button>
-    <button mat-raised-button  class="undo" (click)="onUndoMove()" [disabled]="!undoAble">
+    <button mat-raised-button  class="undo" (click)="onUndoMove()" [disabled]="!cardService.undoAble">
       Undo last move
     </button>
     <button mat-raised-button *ngIf="cardService.activePlayerSerial==='one'" class="reshuffle" (click)="onshuffle()" [disabled]="!canShuffle">
@@ -75,11 +75,8 @@ export class AppComponent implements OnInit, AfterViewInit, AfterContentInit{
   playerRightName: string = 'player four';
   playerRightSerial: Serial = 'four';
 
-
-  public undoAble = false; // flag for undoing last move
-
   public setundoAble(flag: boolean){
-    this.undoAble = flag;
+    this.cardService.undoAble = flag;
     this.changeDetector.detectChanges();
   }
 
@@ -159,7 +156,8 @@ export class AppComponent implements OnInit, AfterViewInit, AfterContentInit{
     this.cardService.playedCard$.subscribe((playedCard: PlayedCard)=>{
       if(!playedCard.card) return;
       if(!playedCard.next) this.canCompleteRound = true;
-      this.setundoAble(true);
+      // if this player played last card - activate undo button
+      this.setundoAble(playedCard.playedBy === this.cardService.activePlayerSerial);
       this.activateCards(playedCard?.next);
       let playedCardOrientation = this.cardService.serialToOrientationMapping[playedCard.serial];
 
@@ -182,8 +180,14 @@ export class AppComponent implements OnInit, AfterViewInit, AfterContentInit{
     // after undoing last played card (coming from server)- perform operations - remove that card from table and place it in player's hand
     this.cardService.unPlayedCard$.subscribe((unPlayedCard: PlayedCard)=>{
       if(!unPlayedCard.card) return;
-      let playedCardOrientation = this.cardService.serialToOrientationMapping[unPlayedCard.serial];
       this.setundoAble(false);
+      this.canCompleteRound = false;
+      let activationInfo: NextPlay = {
+        nextPlayer: unPlayedCard.playedBy, // pllayer one/two/three/four will play
+        nextCards: unPlayedCard.serial
+      }
+      this.activateCards(activationInfo);
+      let playedCardOrientation = this.cardService.serialToOrientationMapping[unPlayedCard.serial];
       switch(playedCardOrientation){
         case 'left':
           this.playerLeft.unplayCard(unPlayedCard.card);
@@ -238,10 +242,10 @@ export class AppComponent implements OnInit, AfterViewInit, AfterContentInit{
   }
 
   setBlankCardsToAll(){
-    this.playerBottom.cards = BlankSet;
-    this.playerLeft.cards = BlankSet;
-    this.playerTop.cards = BlankSet;
-    this.playerRight.cards = BlankSet;
+    this.playerBottom.cards = getBlankSet();
+    this.playerLeft.cards = getBlankSet();
+    this.playerTop.cards = getBlankSet();
+    this.playerRight.cards = getBlankSet();
   }
 
   /**
@@ -252,6 +256,7 @@ export class AppComponent implements OnInit, AfterViewInit, AfterContentInit{
     this.playerLeft.clearPlayedCard();
     this.playerTop.clearPlayedCard();
     this.playerRight.clearPlayedCard();
+    this.activeCardsSerial ='';
     this.setundoAble(false);
   }
 
