@@ -41,7 +41,12 @@ import { BridgeCallComponent } from './bridge-call/bridge-call.component';
   </div>
   <div class="connectedUsers">
     Connected users to the server -{{ cardService.serverUsers.connectedUsers}}<br>
-    Active users to the server -{{ cardService.serverUsers.activeUsers }}
+    Active users to the server -{{ cardService.serverUsers.activeUsers }}<br><br>
+    Current Call - {{cardService.currentCall}} <br><br>
+    Sets taken by your team - {{cardService.ownerTeamSets}}<br>
+    Sets taken by opponents - {{cardService.opponentTeamSets}}<br><br>
+    Your team Points - {{cardService.ownerTeamPoints}}<br>
+    Opponent Team Points - {{cardService.opponentTeamPoints}}<br>
   </div>
   `,
   styleUrls: ['./app.component.css']
@@ -55,11 +60,6 @@ export class AppComponent implements OnInit, AfterViewInit, AfterContentInit{
   @ViewChild('playerLeft') playerLeft!: PlayerComponent;
   @ViewChild('playerTop') playerTop!: PlayerComponent;
   @ViewChild('playerRight') playerRight!: PlayerComponent;
-
-  // bottomCardsActive = false;
-  // topCardsActive = false;
-  // leftCardsActive = false;
-  // rightCardsActive = false;
 
   canShuffle = false; // indicates if cards can be shuffled
   canCompleteRound = false; // indicates if 4 card is played and want to play next round
@@ -124,6 +124,19 @@ export class AppComponent implements OnInit, AfterViewInit, AfterContentInit{
 
     // activates nextplayer cards only if current player is the active player
     this.cardService.nextPlayer$.subscribe((nextPlay)=>{
+      if(nextPlay?.currentPoints){ // indicates round is complete
+        this.clearTable();
+
+        // decides if active player is team one
+        let activePlayerTeamOne = this.cardService.activePlayerSerial === 'one' || this.cardService.activePlayerSerial === 'three';
+
+        // display points and sets taken
+        this.cardService.ownerTeamPoints = activePlayerTeamOne ? nextPlay?.currentPoints.team1 : nextPlay?.currentPoints.team2;
+        this.cardService.opponentTeamPoints = activePlayerTeamOne ? nextPlay?.currentPoints.team2: nextPlay?.currentPoints.team1;
+
+        this.cardService.ownerTeamSets = activePlayerTeamOne ? nextPlay?.currentPoints.setsTakenByTeam1 : nextPlay?.currentPoints.setsTakenByTeam2;
+        this.cardService.opponentTeamSets = activePlayerTeamOne ? nextPlay?.currentPoints.setsTakenByTeam2 : nextPlay?.currentPoints.setsTakenByTeam1;
+      }
       this.activateCards(nextPlay);
     });
 
@@ -203,11 +216,6 @@ export class AppComponent implements OnInit, AfterViewInit, AfterContentInit{
           break;
       }
     });
-
-    // after a round is complete (coming from server) perform operations - clear table
-    this.cardService.roundComplete$.subscribe(complete=>{
-      this.clearTable();
-    });
   }
 
   activateCards(nextPlay: NextPlay | null | undefined){
@@ -219,6 +227,7 @@ export class AppComponent implements OnInit, AfterViewInit, AfterContentInit{
         this.activeCardsSerial = '';
       }
     }
+    this.changeDetector.detectChanges();
   }
 
 
@@ -239,6 +248,7 @@ export class AppComponent implements OnInit, AfterViewInit, AfterContentInit{
     this.playerTopName = this.cardService.players[this.playerTopSerial] || 'player  three';
     this.playerLeftName = this.cardService.players[this.playerLeftSerial] || 'player two';
     this.playerRightName = this.cardService.players[this.playerRightSerial] || 'player four';
+    this.changeDetector.detectChanges();
   }
 
   setBlankCardsToAll(){
@@ -258,6 +268,7 @@ export class AppComponent implements OnInit, AfterViewInit, AfterContentInit{
     this.playerRight.clearPlayedCard();
     this.activeCardsSerial ='';
     this.setundoAble(false);
+    this.changeDetector.detectChanges();
   }
 
   /**

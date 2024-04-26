@@ -63,6 +63,12 @@ export class CardService {
   localPeerId!: string;
   roomId!: string;
 
+  ownerTeamPoints = 0;
+  opponentTeamPoints =0;
+  ownerTeamSets =0;
+  opponentTeamSets =0;
+  currentCall ='';
+
   serverUsers: UserTracker = {
     activeUsers: 0,
     connectedUsers: 0
@@ -78,7 +84,6 @@ export class CardService {
  
   playedCard$ = new BehaviorSubject<PlayedCard>({serial: 'one', card: null, playedBy: 'one'});
   unPlayedCard$ = new BehaviorSubject<PlayedCard>({serial: 'one', card: null, playedBy: 'one'});
-  roundComplete$ = new BehaviorSubject<boolean>(true);
   nextPlayer$ = new BehaviorSubject<NextPlay | null>(null);
 
   onOwnerJoiningRoom$: BehaviorSubject<boolean> = new BehaviorSubject(true);
@@ -149,10 +154,15 @@ export class CardService {
       this.shuffle$.next(cards);
     });
 
+    this.socket.fromEvent<string>('standing_call').subscribe(standing_call=>{
+      this.currentCall = standing_call;
+    });
+
+
     // listening to announcement of next player to play
 
     this.socket.fromEvent<NextPlay>('next_player').subscribe((nextPlay: NextPlay)=>{
-      this.notificationService.sendMessage({message: `Player ${this.players[nextPlay.nextPlayer]}'s turn` , type: NotificationType.success});
+      this.notificationService.sendMessage({message: `Player ${this.players[nextPlay.nextCards]}'s turn` , type: NotificationType.success});
       this.nextPlayer$.next(nextPlay);
     });
 

@@ -108,6 +108,12 @@ export type table = {
 export interface NextPlay {
   nextPlayer: Serial, // pllayer one/two/three/four will play
   nextCards: Serial // serial one/two/three/four cards will play (based on shown cards)
+  currentPoints?: { // on round_complete - other times this will be blank
+    team1: number,
+    team2: number,
+    setsTakenByTeam1: number,
+    setsTakenByTeam2: number
+  }
 }
 
 export const NextPlayer = { // helper object to decide who will play next
@@ -163,6 +169,7 @@ export interface ShownCards { // server broadcasts the shown cards to everyone i
  * card events (server to client)
  * ----------------------------------------------------------------------------------
  * shuffleCard- provides owner 13 cards for the owner - rest 39 cards are face down
+ * standing_call - broadcasts standing call to everyone
  * show_cards - provides 13 cards for a player to show (when a player shows card)
  * 
  * distribute_cards -listening to event when card is distributed 
