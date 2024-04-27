@@ -19,7 +19,10 @@ import { BridgeCallComponent } from './bridge-call/bridge-call.component';
 import { MatSelectModule } from '@angular/material/select';
 import { PointsComponent } from './points/points.component';
 
-const config: SocketIoConfig = { url: 'https://localhost:3000', options: {} };
+const serverUrl = 'www.chapalbarua:com:3000';
+const localServerUrl = 'https://localhost:3000';
+
+const config: SocketIoConfig = { url: serverUrl, options: {} };
 
 @NgModule({
   declarations: [
