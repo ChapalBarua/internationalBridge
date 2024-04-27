@@ -95,25 +95,24 @@ export type table = {
   currentCall: number, // 1,2,3,4,5,6,7
   whoPlayNext: string, // 'one','two','three','four,'
   usersOnTable: number, // how many users are currently on the table
-  currentPoints: { // one + three = team 1, two + four = team2
-    team1: number,
-    team2: number,
-    setsTakenByTeam1: number,
-    setsTakenByTeam2: number
-  },
+  currentPoints: Points, 
   cardHistory: [Card[]] // keep track of cards 13 * 4 cards for a running game
+}
+
+export interface Points { //interface of play points
+  team1: number, // one + three = team 1, two + four = team2
+  team2: number,
+  setsTakenByTeam1: number,
+  setsTakenByTeam2: number,
+  activeGamesByTeam1: number, // did team1 already give a game - helps when points are calculated
+  activeGamesByTeam2: number
 }
 
 // information about who will play next and which cards
 export interface NextPlay {
-  nextPlayer: Serial, // pllayer one/two/three/four will play
+  nextPlayer: Serial, // player one/two/three/four will play
   nextCards: Serial // serial one/two/three/four cards will play (based on shown cards)
-  currentPoints?: { // on round_complete - other times this will be blank
-    team1: number,
-    team2: number,
-    setsTakenByTeam1: number,
-    setsTakenByTeam2: number
-  }
+  clearTable?: boolean // on round_complete - other times this will be blank
 }
 
 export const NextPlayer = { // helper object to decide who will play next
@@ -181,6 +180,8 @@ export interface ShownCards { // server broadcasts the shown cards to everyone i
  * 
  * can_shuffle - listening to event when can be shuffled
  * 
+ * get_updated_points - notifies it is time to input points. also provides updated sets taken after round completed
+ * update_points - broadcasts updates points to all in the room
  * 
  * 
  * client to server
@@ -191,5 +192,33 @@ export interface ShownCards { // server broadcasts the shown cards to everyone i
  * unplayCard - notifies server that the user has unplayed one particular card
  * callDecided - notifies server about the decided call
  * roundComplete - notifies server that current round is complete
+ * completeGame - notifies server that the game is complete and gives points update for the game
+ */
+
+
+/*** logical flow
+ * ---------------------
+ * --- after shuffling and call decided - nextplayer(player, card, clearTable) and standing_call (ex.2-hearts) are fired. We clearTable 
+ * based since nextPlayer has clearTable field true and activate cards for ext player and playable cards
  * 
+ * -- for 1st, 2nd and 3rd played card in the round - server attaches next playable with played card - from which client plays the card
+ * and activates next playable and deactivates others
+ * 
+ * -- for 4th card in the round - server does not attach next playable with played card. Thats how client decideds to show 
+ * complete_round button. (since next playable is absent - activated card does not deactivated automatically. thats why we have to
+ * deacticate it on the client side whenever a card is played. Otherwise that player may play another card and things mess up)
+ * 
+ * -- when the complete_round button is pressed - winner card decided. points get updated. We send next playable info with cleartable
+ * (nextplayer(player, card, clearTable). We send a seperate event to update the points
+ * 
+ * -- all rounds run similar way upto round 13
+ * 
+ * -- on round 13 - when complete_round button is pressed- we send get_updated_points event to user to show points modal. After receiving
+ * the event - UI clears the table and user fills up the point for game and submits it. upon submission -  
+ * 
+ * -- upon receiving completeGame event - server updates and clean up the table including points. Then the user broadcasts 
+ * can_shuffle event to client (when UI receives can_shuffle event - it resets table (clears played cards and gives blank cards to all))
+ * and also activates shuffle card
+ * 
+ * thats how this cycle continues
  */

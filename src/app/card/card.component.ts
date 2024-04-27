@@ -1,6 +1,7 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, Input, OnChanges, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { CardService } from '../card.service';
 import { Card, Serial, generateImageUrl } from '../types';
+import { NotificationType } from '../notification.service';
 
 @Component({
   selector: 'app-card',
@@ -16,6 +17,9 @@ export class CardComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() height: string = "55px";
   @Input() width: string = "50px";
   @Input() active = false;
+  
+  @Output()
+  activeChange = new EventEmitter<boolean>();
 
   faceDownCardUrl = "assets/svg-cards/face_down.png";
 
@@ -36,12 +40,11 @@ export class CardComponent implements OnInit, AfterViewInit, OnChanges {
   ngOnChanges(): void {
 
     this.imageUrl = this.faceUp ? generateImageUrl(this.card): this.faceDownCardUrl;
-    
-    //this.imageUrl = this.card.cardType ? generateImageUrl(this.card): this.faceDownCardUrl;
   }
 
   onClick(){
     if(!this.active) return;
+    this.activeChange.emit(false);
     this.cardService.playCard({ serial: this.serial, card: this.card, playedBy: this.cardService.activePlayerSerial});
   }
 }

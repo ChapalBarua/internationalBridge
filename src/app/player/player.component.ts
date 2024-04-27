@@ -1,5 +1,5 @@
 import { AfterContentChecked, ChangeDetectorRef, Component, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { BlankCard, Card, CardType, CardValue, Orientation, Serial, sortCards } from '../types';
+import { BlankCard, Card, Orientation, Serial, sortCards } from '../types';
 
 @Component({
   selector: 'app-player',

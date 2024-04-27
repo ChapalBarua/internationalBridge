@@ -5,6 +5,7 @@ import { CallInfo, Card, NextPlay, Orientation, PlayedCard, Serial, SerialNameMa
 import * as _ from 'lodash';
 import { MatDialog } from '@angular/material/dialog';
 import { BridgeCallComponent } from './bridge-call/bridge-call.component';
+import { PointsComponent } from './points/points.component';
 
 @Component({
   selector: 'app-root',
@@ -46,7 +47,8 @@ import { BridgeCallComponent } from './bridge-call/bridge-call.component';
     Sets taken by your team - {{cardService.ownerTeamSets}}<br>
     Sets taken by opponents - {{cardService.opponentTeamSets}}<br><br>
     Your team Points - {{cardService.ownerTeamPoints}}<br>
-    Opponent Team Points - {{cardService.opponentTeamPoints}}<br>
+    Opponent Team Points - {{cardService.opponentTeamPoints}}<br><br>
+    Games: &#160; Team 1: {{cardService.activeGamesByTeam1}}, &#160; Team2: {{cardService.activeGamesByTeam2}}
   </div>
   `,
   styleUrls: ['./app.component.css']
@@ -84,7 +86,6 @@ export class AppComponent implements OnInit, AfterViewInit, AfterContentInit{
   }
 
   ngOnInit(): void {
-    
   }
 
   ngAfterViewInit(): void {
@@ -92,16 +93,13 @@ export class AppComponent implements OnInit, AfterViewInit, AfterContentInit{
     // after a shuffle button is pressed (coming from server) perform operations - clears table, provide 13 cards to the owner, 39 face down cards to rest
     this.cardService.shuffle$.subscribe((cards: Card[])=>{
       this.canShuffle = false;
-      this.setBlankCardsToAll();
-      this.clearTable();
+      this.resetTable();
       if(cards.length){
         this.playerBottom.cards = cards;
         this.playerBottom.cardShown = true;
         this.openDialog();
       };
     });
-
-    
 
     // sets up orientation on owner joining the room
     this.cardService.onOwnerJoiningRoom$.subscribe(()=>{
@@ -119,23 +117,23 @@ export class AppComponent implements OnInit, AfterViewInit, AfterContentInit{
 
     // activates canshuffle button after gameCompleted or 4 people have joined
     this.cardService.canShuffle$.subscribe((canShuffle)=>{
+      this.resetTable();
       this.canShuffle = canShuffle;
+    });
+
+    
+    // show points modal when server asks for it- after 13*4 cards are played
+    this.cardService.getUpdatedPoints$.subscribe((update)=>{
+      if(update){
+        this.clearTable();
+        this.showPointsModal();
+      }
     });
 
     // activates nextplayer cards only if current player is the active player
     this.cardService.nextPlayer$.subscribe((nextPlay)=>{
-      if(nextPlay?.currentPoints){ // indicates round is complete
+      if(nextPlay?.clearTable){ // indicates round is complete
         this.clearTable();
-
-        // decides if active player is team one
-        let activePlayerTeamOne = this.cardService.activePlayerSerial === 'one' || this.cardService.activePlayerSerial === 'three';
-
-        // display points and sets taken
-        this.cardService.ownerTeamPoints = activePlayerTeamOne ? nextPlay?.currentPoints.team1 : nextPlay?.currentPoints.team2;
-        this.cardService.opponentTeamPoints = activePlayerTeamOne ? nextPlay?.currentPoints.team2: nextPlay?.currentPoints.team1;
-
-        this.cardService.ownerTeamSets = activePlayerTeamOne ? nextPlay?.currentPoints.setsTakenByTeam1 : nextPlay?.currentPoints.setsTakenByTeam2;
-        this.cardService.opponentTeamSets = activePlayerTeamOne ? nextPlay?.currentPoints.setsTakenByTeam2 : nextPlay?.currentPoints.setsTakenByTeam1;
       }
       this.activateCards(nextPlay);
     });
@@ -240,7 +238,21 @@ export class AppComponent implements OnInit, AfterViewInit, AfterContentInit{
     });
   }
 
+  showPointsModal(): void{
+    if(this.cardService.activePlayerSerial!='one') return;
+    const dialogRef = this.dialog.open(PointsComponent, { disableClose: true });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      this.cardService.gameComplete({...result, setsTakenByTeam1: 0, setsTakenByTeam: 0});
+    });
+  }
+
   ngAfterContentInit(): void {
+  }
+
+  resetTable(){
+    this.setBlankCardsToAll();
+    this.clearTable();
   }
 
   updateUserNames(){
@@ -252,6 +264,10 @@ export class AppComponent implements OnInit, AfterViewInit, AfterContentInit{
   }
 
   setBlankCardsToAll(){
+    this.playerBottom.cardShown = false;
+    this.playerLeft.cardShown = false;
+    this.playerTop.cardShown = false;
+    this.playerRight.cardShown = false;
     this.playerBottom.cards = getBlankSet();
     this.playerLeft.cards = getBlankSet();
     this.playerTop.cards = getBlankSet();

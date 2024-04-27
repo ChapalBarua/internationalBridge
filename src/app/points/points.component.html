@@ -1,0 +1,34 @@
+<h2 mat-dialog-title>Points acquired in this game: </h2>
+<mat-dialog-content>
+    <form [formGroup]="pointsForm" fxLayout="column" fxLayoutAlign="center">
+        <div>
+            <mat-form-field>
+                <mat-label>Team 1 Points: </mat-label>
+                <input matInput type="number" formControlName="team1">
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <mat-label>Team 2 Points: </mat-label>
+                <input matInput type="number" formControlName="team2">
+            </mat-form-field>
+        </div>
+
+        <div>
+            <mat-form-field>
+                <mat-label>Team 1 Games: </mat-label>
+                <input matInput type="number" formControlName="activeGamesByTeam1">
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <mat-label>Team 2 Games: </mat-label>
+                <input matInput type="number" formControlName="activeGamesByTeam2">
+            </mat-form-field>
+        </div>
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="pointsForm.value" cdkFocusInitial [disabled]="!pointsForm.valid">Ok</button>
+</mat-dialog-actions>

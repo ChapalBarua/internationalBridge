@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject, of } from 'rxjs';
-import { Card, Serial, PlayedCard, SerialNameMapping, RoomJoin, ShownCards, UserTracker, Orientation, OrientationSerialMapping, CallInfo, NextPlay } from './types';
+import { Card, Serial, PlayedCard, SerialNameMapping, RoomJoin, ShownCards, UserTracker, Orientation, OrientationSerialMapping, CallInfo, NextPlay, Points } from './types';
 import { Socket } from 'ngx-socket-io';
 import { NotificationService, NotificationType } from './notification.service';
 import { Dictionary } from 'lodash';
@@ -68,6 +68,8 @@ export class CardService {
   ownerTeamSets =0;
   opponentTeamSets =0;
   currentCall ='';
+  activeGamesByTeam1 = 0;
+  activeGamesByTeam2 = 0;
 
   serverUsers: UserTracker = {
     activeUsers: 0,
@@ -82,14 +84,16 @@ export class CardService {
   }); 
   
  
+  roundComplete$ = new Subject();
   playedCard$ = new BehaviorSubject<PlayedCard>({serial: 'one', card: null, playedBy: 'one'});
   unPlayedCard$ = new BehaviorSubject<PlayedCard>({serial: 'one', card: null, playedBy: 'one'});
   nextPlayer$ = new BehaviorSubject<NextPlay | null>(null);
+  getUpdatedPoints$ = new BehaviorSubject(false); // observer to notify taking points input
 
   onOwnerJoiningRoom$: BehaviorSubject<boolean> = new BehaviorSubject(true);
   onRoomUsersChange$: BehaviorSubject<boolean>  = new BehaviorSubject(true); // notifies others when a user enters leaves room
 
-  constructor(private socket: Socket, private notificationService: NotificationService) {
+  constructor(private socket: Socket, public notificationService: NotificationService) {
 
     // when the owner is connected to the server
     this.socket.on("connect", () => {
@@ -185,6 +189,19 @@ export class CardService {
     this.socket.fromEvent<boolean>('can_shuffle').subscribe((canShuffle: boolean)=>{
       this.canShuffle$.next(canShuffle);
     });
+
+    // shows points modal
+    this.socket.fromEvent('get_updated_points').subscribe(()=>{
+      this.getUpdatedPoints$.next(true);
+    });
+
+    // server announces round_complete
+    this.socket.fromEvent('round_complete').subscribe(()=>{
+      this.roundComplete$.next(true);
+    });
+
+    // update points based on server feedback
+    this.socket.on('update_points', this.onUpdatePoints.bind(this));
   }
 
   ///////////////// instruction to server functions //////////////////////////////////////////
@@ -232,6 +249,13 @@ export class CardService {
   }
 
   /**
+   * provides server updated points
+   */
+  gameComplete(points: Points){
+    this.socket.emit('completeGame', points);
+  }
+
+  /**
    * notifies server that current round is complete
    */
   finishRound(){
@@ -246,6 +270,23 @@ export class CardService {
    */
     setServerUsers(users: UserTracker){
       this.serverUsers= users;
+    }
+
+    // function to update displayed points
+    onUpdatePoints(currentPoints: Points){
+      // decides if active player is team one
+      let activePlayerTeamOne = this.activePlayerSerial === 'one' || this.activePlayerSerial === 'three';
+  
+      // display points and sets taken
+      this.ownerTeamPoints = activePlayerTeamOne ? currentPoints.team1 : currentPoints.team2;
+      this.opponentTeamPoints = activePlayerTeamOne ? currentPoints.team2: currentPoints.team1;
+  
+      this.ownerTeamSets = activePlayerTeamOne ? currentPoints.setsTakenByTeam1 : currentPoints.setsTakenByTeam2;
+      this.opponentTeamSets = activePlayerTeamOne ? currentPoints.setsTakenByTeam2 : currentPoints.setsTakenByTeam1;
+
+      this.activeGamesByTeam1 = activePlayerTeamOne ? currentPoints.activeGamesByTeam1 : currentPoints.activeGamesByTeam2;
+      this.activeGamesByTeam2 = activePlayerTeamOne ? currentPoints.activeGamesByTeam2 : currentPoints.activeGamesByTeam1;
+
     }
   
 

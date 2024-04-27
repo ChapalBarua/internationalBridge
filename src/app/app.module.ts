@@ -17,6 +17,7 @@ import { MatInputModule } from '@angular/material/input';
 import {MatDialogModule} from '@angular/material/dialog';
 import { BridgeCallComponent } from './bridge-call/bridge-call.component';
 import { MatSelectModule } from '@angular/material/select';
+import { PointsComponent } from './points/points.component';
 
 const config: SocketIoConfig = { url: 'https://localhost:3000', options: {} };
 
@@ -26,7 +27,8 @@ const config: SocketIoConfig = { url: 'https://localhost:3000', options: {} };
     CardComponent,
     PlayerComponent,
     HomeComponent,
-    BridgeCallComponent
+    BridgeCallComponent,
+    PointsComponent
   ],
   imports: [
     BrowserModule,
