@@ -481,6 +481,7 @@ export class CardService {
   
     this.localStream = stream;
     this.videoElements[this.videoElementsCounter].srcObject = stream;
+    this.videoElements[this.videoElementsCounter].volume = 0;
     this.videoElementsCounter++;
     this.socket.emit('start_call', {
       roomId: this.roomId,

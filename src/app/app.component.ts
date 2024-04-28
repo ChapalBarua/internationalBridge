@@ -100,10 +100,6 @@ export class AppComponent implements OnInit, AfterViewInit, AfterContentInit{
     videoElements[1] = document.getElementById('video-2');
     videoElements[2] = document.getElementById('video-3');
     videoElements[3] = document.getElementById('video-4');
-    videoElements[0].volume = 0;
-    videoElements[1].volume = 0;
-    videoElements[2].volume = 0;
-    videoElements[3].volume = 0;
     this.cardService.videoElements = videoElements;
 
     await this.cardService.setLocalStream();
