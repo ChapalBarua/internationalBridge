@@ -50,6 +50,11 @@ import { PointsComponent } from './points/points.component';
     Opponent Team Points - {{cardService.opponentTeamPoints}}<br><br>
     Games: &#160; Team 1: {{cardService.activeGamesByTeam1}}, &#160; Team2: {{cardService.activeGamesByTeam2}}
   </div>
+  <span></span>
+  <video class="video-1" id="video-1" autoplay muted></video>
+  <video class="video-2" id="video-2" autoplay muted></video>
+  <video class="video-3" id="video-3" autoplay muted></video>
+  <video class="video-4" id="video-4" autoplay muted></video>
   `,
   styleUrls: ['./app.component.css']
 })
@@ -88,8 +93,18 @@ export class AppComponent implements OnInit, AfterViewInit, AfterContentInit{
   ngOnInit(): void {
   }
 
-  ngAfterViewInit(): void {
+  async ngAfterViewInit(): Promise<void> {
+    // setting up webrtc
+    let videoElements = [];
+    videoElements[0] = document.getElementById('video-1');
+    videoElements[1] = document.getElementById('video-2');
+    videoElements[2] = document.getElementById('video-3');
+    videoElements[3] = document.getElementById('video-4');
 
+    this.cardService.videoElements = videoElements;
+
+    await this.cardService.setLocalStream();
+    
     // after a shuffle button is pressed (coming from server) perform operations - clears table, provide 13 cards to the owner, 39 face down cards to rest
     this.cardService.shuffle$.subscribe((cards: Card[])=>{
       this.canShuffle = false;

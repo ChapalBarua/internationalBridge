@@ -222,3 +222,41 @@ export interface ShownCards { // server broadcasts the shown cards to everyone i
  * 
  * thats how this cycle continues
  */
+
+
+
+/**    WebRTC logical flow -client side
+ * 
+ *    after joining room - 
+
+*   1. sets up peer id - localPeerId = event.peerId
+*   2. connect site video player with computer -setLocalStream
+*   3. sends start call msg to server (room_id, peer_id) that gets broadcasted to others
+
+*   4. on receiving start_call event - 
+        -include them in peerconections with RTCPeerConnection
+        -creates an offer to connect - emits webrtc_offer
+
+
+*   5. server forwards it to the newly connected peer
+
+*   6. on receiving webrtc_offer client(newly connected) 
+        -send IceCandidate information to the sender -webrtc_ice_candidate
+        - on receiving the IceCandidate info - the sender sets it up with remote peerId in peerConnections (RTCPeerConnection)
+        - Clients also creates an webrtc_answer event - that gets forwarded to the existing peer who offered
+        - 
+
+*   7. on webrtc_answer - connection establishment is completed
+
+
+*** checkPeerDisconnect - it is a function that is linked with webrtc conection - executes
+                    on disconnect
+
+--------------------------------------------------------------------
+----functions that are needed for adding video for card site
+
+-->setRemoteStream--> connects with remote video
+---> setLocalStream --> connects with local video
+    
+
+*/

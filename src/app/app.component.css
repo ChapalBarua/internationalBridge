@@ -82,3 +82,30 @@ button:hover {
     position: absolute;
     left: 920px;
 }
+
+.video-1{
+    width: 300px;
+    right: 0px;
+    position: absolute;
+}
+
+.video-2{
+    top: 250px;
+    width: 300px;
+    right: 310px;
+    position: absolute;
+}
+
+.video-3{
+    top: 250px;
+    width: 300px;
+    right: 0px;
+    position: absolute;
+}
+
+.video-4{
+    top: 500px;
+    width: 300px;
+    right: 0px;
+    position: absolute;
+}
