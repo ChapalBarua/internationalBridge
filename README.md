@@ -7,9 +7,9 @@ Application Architecture-
 
 Services -
 -------------------------------------
-WebRTc Service - Takes Care of Video Call
-Connection Service - Takes care of establising Socket Connection, joining/disconnecting from a room
-Card Service - Takes care of Game Play
+WebRTc Service - Takes Care of Video Call.
+Connection Service - Takes care of establising Socket Connection, joining/disconnecting from a room.
+Card Service - Takes care of Game Play.
 
 
 Socket Events -
