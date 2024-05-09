@@ -1,0 +1,154 @@
+.points {
+    display: grid;
+    height: 100vh;
+    width: 41vw;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 2fr 5fr 5fr;
+    /* row-gap: 1vh; */
+    .points-left {
+        height: 20vh;
+
+
+        grid-column: 1;
+        grid-row: 1;
+        width: 20vw;
+        background-color: darkgray;
+    }
+
+    .points-right {
+        height: 20vh;
+
+        grid-column: 2;
+        width: 20vw;
+
+        grid-row: 1;
+        background-color: deeppink;
+    }
+
+    .video-1 {
+        height: 40vh;
+
+        grid-column: 1;
+        width: 20vw;
+        grid-row: 2;
+        background-color: aliceblue;
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    .video-2 {
+        height: 40vh;
+
+        grid-column: 2;
+        width: 20vw;
+        grid-row: 2;
+        background-color: rgb(24, 100, 165);
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+    .video-3 {
+        height: 40vh;
+
+        grid-column: 1;
+        width: 20vw;
+        grid-row: 3;
+        background-color: rgb(55, 196, 203);
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+    .video-4 {
+        height: 40vh;
+
+        grid-column: 2;
+        width: 20vw;
+        grid-row: 3;
+        background-color: rgb(240, 255, 246);
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+    
+}
+
+@media (max-width: 978px) and (orientation:landscape){
+    .points {
+        .points-left {
+            height: 28vh;
+        }
+    
+        .points-right {
+            height: 28vh;
+        }
+
+        .video-1{
+            height: 36vh;
+        }
+    
+        .video-2{
+            height: 36vh;
+        }
+    
+        .video-3{
+            height: 36vh;
+        }
+    
+        .video-4{
+            height: 36vh;
+        }
+    }
+}
+
+@media (max-width: 978px) and (orientation:portrait){
+    .points {
+        height: 40vh;
+        width: 100vw;
+
+        .points-left {
+            width: 50vw;
+            height: 10vh;
+        }
+    
+        .points-right {
+            width: 50vw;
+            height: 10vh;;
+        }
+
+        .video-1{
+            height: 15vh;
+            width: 50vw;
+        }
+    
+        .video-2{
+            height: 15vh;
+            width: 50vw;
+        }
+    
+        .video-3{
+            height: 15vh;
+            width: 50vw;
+        }
+    
+        .video-4{
+            height: 15vh;
+            width: 50vw;
+        }
+    }
+}
+
+@media (max-width: 978px) {
+    .points{
+        font-size: smaller;
+        line-height: normal;
+    }
+}

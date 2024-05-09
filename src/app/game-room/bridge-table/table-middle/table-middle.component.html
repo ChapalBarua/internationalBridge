@@ -1,0 +1,39 @@
+<div class="table-container">
+    <div class="top-player-name" [ngClass]="{'active-card': nextPlayer === 'top'}">{{connectionService.playerTopName}}</div>
+    <ng-container *ngIf="cardService.cardsOnTable['top']?.card as card">
+        <div class="top-played-card" >
+            <app-card [card]="card" [faceUp]="true" [playedCard]="true"> </app-card>
+        </div>
+    </ng-container>
+    
+    <div class="bottom-player-name" [ngClass]="{'active-card': nextPlayer === 'bottom'}">{{connectionService.playerBottomName}}</div>
+    <ng-container *ngIf="cardService.cardsOnTable['bottom']?.card as card">
+        <div class="bottom-played-card" >
+            <app-card [card]="card" [faceUp]="true" [playedCard]="true"> </app-card>
+        </div>
+    </ng-container>
+    
+
+    <div class="left-player-name" [ngClass]="{'active-card': nextPlayer === 'left'}">{{connectionService.playerLeftName}}</div>
+    <ng-container *ngIf="cardService.cardsOnTable['left']?.card as card">
+        <div class="left-played-card" >
+            <app-card [card]="card" [faceUp]="true" [playedCard]="true"> </app-card>
+        </div>
+    </ng-container>
+    
+
+    <div class="right-player-name" [ngClass]="{'active-card': nextPlayer === 'right'}">{{connectionService.playerRightName}}</div>
+    <ng-container *ngIf="cardService.cardsOnTable['right']?.card as card">
+        <div class="right-played-card">
+            <app-card [card]="card" [faceUp]="true" [playedCard]="true" #playedCard> </app-card>
+        </div>
+    </ng-container>
+    
+
+    <button mat-raised-button  class="undo" (click)="onUndoMove()" [disabled]="!cardService.undoAble">
+        Undo last move
+    </button>
+    <button mat-raised-button *ngIf="connectionService.activePlayerSerial==='one'" class="reshuffle" (click)="onshuffle()" [disabled]="!canShuffle">
+        Shuffle
+    </button>
+</div>

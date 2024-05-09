@@ -1,0 +1,44 @@
+.img {
+    display: grid;
+    
+    img {
+        grid-area: image;
+        height: 12vh;
+        width: 4vw;
+    }
+}
+
+@media (max-width: 978px) and (orientation:landscape){
+    .img {
+        img {
+            height: 13vh;
+        }
+    }
+}
+
+@media screen and (orientation:portrait) {
+    .img {
+        img {
+            height: 7vh;
+            width: 8vw;
+        }
+    }
+}
+
+
+.img {
+    .played-card {
+        height: 18vh;
+        width: 10vw;
+    }
+}
+
+
+@media screen and (orientation:portrait){
+    .img {
+        .played-card {
+            height: 8vh;
+            width: 10vw;
+        }
+    }
+}

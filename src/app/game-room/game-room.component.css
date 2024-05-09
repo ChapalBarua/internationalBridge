@@ -1,0 +1,35 @@
+.game-room {
+    display: grid;
+    grid-template-columns: 6fr 4fr;
+    .bridge-table {
+        width: 59vw;
+        height: 100vh;
+    }
+    .game-info {
+        width: 41vw;
+        height: 100vh;
+        background-color: lightslategrey;
+    }
+}
+
+
+
+@media screen and (orientation:portrait) {
+    .game-room {
+        grid-template-columns: 1fr;
+        grid-template-rows: 6fr 4fr;
+        .bridge-table  {
+            grid-column: 1;
+            grid-row: 1;
+            width: 100vw;
+            height: 60vh;
+        }
+        .game-info {
+            grid-column: 1;
+            grid-row: 2;
+            width: 100vw;
+            height: 40vh;
+            background-color: lightslategrey;
+        }
+    }
+}

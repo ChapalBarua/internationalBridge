@@ -1,0 +1,22 @@
+<div class="container">
+    <div class="grid">
+        <div class="player-left">
+            <app-player  #playerLeft [orientation]="'left'" [serial]="playerLeftSerial" [active]="activeCardsSerial===playerLeftSerial"></app-player>
+        </div>
+        
+        <div class="player-top">
+            <app-player #playerTop  [orientation]="'top'" [serial]="playerTopSerial" [active]="activeCardsSerial===playerTopSerial"></app-player>
+        </div>
+        
+        <div class="player-right">
+            <app-player #playerRight  [orientation]="'right'" [serial]="playerRightSerial" [active]="activeCardsSerial===playerRightSerial"></app-player>
+        </div>
+        
+        <app-table-middle [canShuffle]="canShuffle" [nextPlayer]="nextPlayer" class="table-middle"/>
+        
+        <div class="player-bottom">
+            <app-player #playerBottom  [orientation]="'bottom'" [serial]="playerBottomSerial" [active]="activeCardsSerial===playerBottomSerial"></app-player>
+        </div>
+    </div>
+        
+</div>

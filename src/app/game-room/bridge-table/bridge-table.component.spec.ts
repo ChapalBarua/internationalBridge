@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AppComponent } from './app.component';
+import { BridgeTableComponent } from './bridge-table.component';
 
-describe('AppComponent', () => {
-  let component: AppComponent;
-  let fixture: ComponentFixture<AppComponent>;
+describe('BridgeTableComponent', () => {
+  let component: BridgeTableComponent;
+  let fixture: ComponentFixture<BridgeTableComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppComponent]
+      imports: [BridgeTableComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(AppComponent);
+    fixture = TestBed.createComponent(BridgeTableComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

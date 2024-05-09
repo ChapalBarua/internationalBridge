@@ -1,0 +1,6 @@
+<div [ngClass]="{'player-container-vertical': orientation === 'left' ||  orientation === 'right',
+'player-container-horizontal': orientation === 'bottom' || orientation === 'top' }">
+    <div *ngFor = "let card of cards" class="card">
+        <app-card  [card]="card" [orientation]="orientation" [serial]="serial" [faceUp]="_cardShown" [active]="active"></app-card>
+    </div>
+</div>

@@ -1,0 +1,15 @@
+.authentication-card {
+    width: 262px;
+    margin: 1vw auto;
+
+}
+
+.authentication-card-container {
+    min-height: 100vh;
+}
+
+.connection-info{
+    display: grid;
+    justify-items: center;
+    margin-top: 1vw;
+}
