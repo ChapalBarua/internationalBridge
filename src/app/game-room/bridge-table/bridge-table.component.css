@@ -13,25 +13,25 @@
             height: 100vh;
             grid-column: 1/2;
             grid-row: 1/9;
-            background-color: blue;
+            background-color: #8c8cd1;
         }
 
         .player-right {
             height: 100vh;
             grid-column: 8/9;
             grid-row: 1/9;
-            background-color: blue;
+            background-color: #8c8cd1;
         }
 
         .player-top {
             grid-column: 2/8;
             grid-row: 1/2;
-            background-color: brown;
+            background-color: #bad49ac9;
         }
         .player-bottom {
             grid-column: 2/8;
             grid-row: 8/9;
-            background-color: brown;
+            background-color: #bad49ac9;
             align-content: end;
             
         }
@@ -39,7 +39,6 @@
         .table-middle {
             grid-column: 2/8;
             grid-row: 2/8;
-            background-color: deepskyblue;
             align-content: center
         }
     }

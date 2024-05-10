@@ -1,10 +1,10 @@
 .points {
+    border: 1px solid black;
     display: grid;
     height: 100vh;
     width: 41vw;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 2fr 5fr 5fr;
-    /* row-gap: 1vh; */
     .points-left {
         height: 20vh;
 
@@ -12,7 +12,7 @@
         grid-column: 1;
         grid-row: 1;
         width: 20vw;
-        background-color: darkgray;
+        background-color: #bad49ac9;
     }
 
     .points-right {
@@ -22,7 +22,7 @@
         width: 20vw;
 
         grid-row: 1;
-        background-color: deeppink;
+        background-color: #8c8cd1;
     }
 
     .video-1 {
@@ -31,7 +31,6 @@
         grid-column: 1;
         width: 20vw;
         grid-row: 2;
-        background-color: aliceblue;
         video {
             width: 100%;
             height: 100%;
@@ -45,7 +44,6 @@
         grid-column: 2;
         width: 20vw;
         grid-row: 2;
-        background-color: rgb(24, 100, 165);
         video {
             width: 100%;
             height: 100%;
@@ -58,7 +56,7 @@
         grid-column: 1;
         width: 20vw;
         grid-row: 3;
-        background-color: rgb(55, 196, 203);
+        background-color: #bad49ac9;
         video {
             width: 100%;
             height: 100%;
@@ -71,7 +69,7 @@
         grid-column: 2;
         width: 20vw;
         grid-row: 3;
-        background-color: rgb(240, 255, 246);
+        background-color: #8c8cd1;
         video {
             width: 100%;
             height: 100%;
