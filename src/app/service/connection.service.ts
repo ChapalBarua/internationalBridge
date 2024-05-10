@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class ConnectionService {
-
+  connected = false;
   localPeerId!: string;
   roomId!: string;
 
@@ -90,7 +90,7 @@ export class ConnectionService {
      // when the owner is connected to the server
      this.socket.on("connect", () => {
       this.notificationService.sendMessage({message: `Connected. Welcome to the Card Game Website` , type: NotificationType.info});
-      console.log('connected to the server');
+      this.connected = true;
     });
     
     this.socket.on("disconnect", () => {

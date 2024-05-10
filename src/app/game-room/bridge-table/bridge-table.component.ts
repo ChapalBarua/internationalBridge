@@ -40,6 +40,7 @@ export class BridgeTableComponent implements AfterViewInit{
   public setundoAble(flag: boolean){
     this.cardService.undoAble = flag;
     this.changeDetector.detectChanges();
+    this.connectionService.middleTableChanges$.next(true);
   }
 
   constructor(

@@ -20,7 +20,10 @@
     </mat-card-actions>
     </mat-card>
     <div class="connection-info">
-    Connected users to the server -{{ connectionService.serverUsers.connectedUsers}}<br>
-    Active users to the server -{{ connectionService.serverUsers.activeUsers }}
+        Connected users to the server -{{ connectionService.serverUsers.connectedUsers}}<br>
+        Active users to the server -{{ connectionService.serverUsers.activeUsers }}<br>
+        <span *ngIf="!connectionService.connected" style="color: red;">
+            Could not connect to the server. Please disable VPN.
+        </span>
     </div>
 </div>
