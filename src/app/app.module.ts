@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ToastrModule } from 'ngx-toastr';
 import { AppRoutingModule } from './app-routing.module';
@@ -22,6 +22,7 @@ import { GameRoomComponent } from './game-room/game-room.component';
 import { GameInfoComponent } from './game-room/game-info/game-info.component';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 const serverUrl = 'https://www.chapalbarua.com:3000';
 const localServerUrl = 'https://localhost:3000';
@@ -57,6 +58,12 @@ const config: SocketIoConfig = { url: serverUrl, options: { autoConnect: true} }
     SocketIoModule.forRoot(config),
     ToastrModule.forRoot({
       positionClass :'toast-top-right'
+    }),
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
     })
   ],
   providers: [
