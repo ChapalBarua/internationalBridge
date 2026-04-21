@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --ssl true --ssl-key \\Users\\chapa\\Desktop\\repos\\cardGameServer\\helpers\\secrets\\certs\\cert.key --ssl-cert \\Users\\chapa\\Desktop\\repos\\cardGameServer\\helpers\\secrets\\certs\\cert.crt",
+    "start": "ng serve --ssl true --ssl-key /Users/chapal/Desktop/repos/cardGameServer/helpers/secrets/certs/cert.key --ssl-cert /Users/chapal/Desktop/repos/cardGameServer/helpers/secrets/certs/cert.crt",
     "start:local": "ng serve --host 0.0.0.0 --ssl true --ssl-key \\Users\\chapa\\Desktop\\repos\\cardGameServer\\helpers\\secrets\\10.0.0.19\\cert.key --ssl-cert \\Users\\chapa\\Desktop\\repos\\cardGameServer\\helpers\\secrets\\10.0.0.19\\cert.crt",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
@@ -22,6 +22,9 @@
     "@angular/platform-browser-dynamic": "^17.3.0",
     "@angular/router": "^17.3.0",
     "@angular/service-worker": "^17.3.0",
+    "@capacitor/cli": "^8.3.1",
+    "@capacitor/core": "^8.3.1",
+    "@capacitor/ios": "^8.3.1",
     "@popperjs/core": "^2.11.8",
     "lodash": "^4.17.21",
     "ngx-socket-io": "4.6.0",
