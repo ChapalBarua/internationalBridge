@@ -11,7 +11,7 @@ import { CardService } from 'src/app/service/card.service';
 export class GameInfoComponent implements AfterViewInit{
 
   constructor(
-    private webRtcService: WebrtcService,
+    public webRtcService: WebrtcService,
     public connectionService: ConnectionService,
     public cardService: CardService,
     private changeDetector: ChangeDetectorRef
@@ -29,11 +29,14 @@ export class GameInfoComponent implements AfterViewInit{
     videoElements[2] = document.getElementById('video-3');
     videoElements[3] = document.getElementById('video-4');
     this.webRtcService.videoElements = videoElements;
-
-    await this.webRtcService.setLocalStream();
   }
 
   triggerChanges(){
     this.changeDetector.detectChanges();
+  }
+
+  async joinCall(): Promise<void> {
+    await this.webRtcService.setLocalStream();
+    this.triggerChanges();
   }
 }

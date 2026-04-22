@@ -9,6 +9,8 @@ export class WebrtcService {
 
   videoElementsCounter = 0;
   videoElements!: any[];
+  callJoined = false;
+  callJoining = false;
   mediaConstraints = {
     audio: true,
     video:{
@@ -37,6 +39,10 @@ export class WebrtcService {
 
   constructor(private socket: Socket, private connecTionService: ConnectionService) {
     this.socket.on('start_call', async (event: any) => {
+      if (!this.callJoined) {
+        return;
+      }
+
       const remotePeerId = event.senderId;
       // console.log(`Socket event callback: start_call. RECEIVED from ${remotePeerId}`);
     
@@ -52,6 +58,10 @@ export class WebrtcService {
      * webrtc_offer message received with the offer and sends the response to the other peer
      */
     this.socket.on('webrtc_offer', async (event: any) => {
+      if (!this.callJoined) {
+        return;
+      }
+
       // console.log(`Socket event callback: webrtc_offer. RECEIVED from ${event.senderId}`);
       const remotePeerId = event.senderId;
 
@@ -68,6 +78,10 @@ export class WebrtcService {
     });
 
     this.socket.on('webrtc_answer', async (event: any) => {
+      if (!this.callJoined || !this.peerConnections[event.senderId]) {
+        return;
+      }
+
       // console.log(`Socket event callback: webrtc_answer. RECEIVED from ${event.senderId}`)
     
       // console.log(`Remote description set on peer ${this.connecTionService.localPeerId} after answer received`)
@@ -77,6 +91,10 @@ export class WebrtcService {
     });
 
     this.socket.on('webrtc_ice_candidate', (event: any) => {
+      if (!this.callJoined) {
+        return;
+      }
+
       const senderPeerId = event.senderId;
       // console.log(`Socket event callback: webrtc_ice_candidate. RECEIVED from ${senderPeerId}`)
     
@@ -85,11 +103,16 @@ export class WebrtcService {
         sdpMLineIndex: event.label,
         candidate: event.candidate,
       })
-      this.peerConnections[senderPeerId].addIceCandidate(candidate)
+      this.peerConnections[senderPeerId]?.addIceCandidate(candidate)
     });
   }
 
   async setLocalStream() {
+    if (this.callJoined || this.callJoining) {
+      return;
+    }
+
+    this.callJoining = true;
     // console.log('Local stream set');
     let stream;
     try {
@@ -97,13 +120,17 @@ export class WebrtcService {
     } catch (error) {
       console.error('Could not get user media', error);
       alert(`Could not access camera/microphone: ${error instanceof Error ? error.message : String(error)}`);
+      this.callJoining = false;
       return;
-    };
+    }
+
     this.localStream = stream;
     this.videoElements[this.videoElementsCounter].srcObject = stream;
     this.videoElements[this.videoElementsCounter].volume = 0;
     this.videoElements[this.videoElementsCounter].muted = true;
     this.videoElementsCounter++;
+    this.callJoined = true;
+    this.callJoining = false;
     this.socket.emit('start_call', {
       roomId: this.connecTionService.roomId,
       senderId: this.connecTionService.localPeerId

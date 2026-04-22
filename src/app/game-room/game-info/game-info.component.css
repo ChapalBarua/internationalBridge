@@ -25,6 +25,22 @@
         background-color: #8c8cd1;
     }
 
+    .join-call-button {
+        margin-top: 0.75rem;
+        padding: 0.65rem 0.9rem;
+        border: none;
+        border-radius: 999px;
+        background-color: #17324d;
+        color: #fff;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .join-call-button:disabled {
+        background-color: #5d748c;
+        cursor: default;
+    }
+
     .video-1 {
         height: 40vh;
 
