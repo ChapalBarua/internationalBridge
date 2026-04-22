@@ -7,10 +7,10 @@ import { ConnectionService } from './connection.service';
 })
 export class WebrtcService {
 
-  videoElementsCounter = 0;
   videoElements!: any[];
   callJoined = false;
   callJoining = false;
+  remoteVideoSlots: Record<string, number> = {};
   mediaConstraints = {
     audio: true,
     video:{
@@ -125,10 +125,10 @@ export class WebrtcService {
     }
 
     this.localStream = stream;
-    this.videoElements[this.videoElementsCounter].srcObject = stream;
-    this.videoElements[this.videoElementsCounter].volume = 0;
-    this.videoElements[this.videoElementsCounter].muted = true;
-    this.videoElementsCounter++;
+    const localVideoElement = this.videoElements[0];
+    localVideoElement.srcObject = stream;
+    localVideoElement.volume = 0;
+    localVideoElement.muted = true;
     this.callJoined = true;
     this.callJoining = false;
     this.socket.emit('start_call', {
@@ -152,12 +152,17 @@ export class WebrtcService {
    */
   setRemoteStream(event: any, remotePeerId: string) {
     // console.log('Remote stream set');
-    if(event.track.kind == "video") {
-      const videoRemote = this.videoElements[this.videoElementsCounter];
+    if (event.track.kind == 'video') {
+      const slotIndex = this.remoteVideoSlots[remotePeerId] ?? this.getNextRemoteVideoSlot();
+      if (slotIndex === -1) {
+        return;
+      }
+
+      this.remoteVideoSlots[remotePeerId] = slotIndex;
+      const videoRemote = this.videoElements[slotIndex];
       videoRemote.srcObject = event.streams[0];
       videoRemote.setAttribute('autoplay', '');
-      videoRemote.style.backgroundColor = "red";
-      this.videoElementsCounter++;
+      videoRemote.style.backgroundColor = 'transparent';
     }
   }
 
@@ -168,10 +173,28 @@ export class WebrtcService {
     var state = this.peerConnections[remotePeerId].iceConnectionState;
     // console.log(`connection with peer ${remotePeerId}: ${state}`);
     if (state === "failed" || state === "closed" || state === "disconnected") {
-      //Remove the video element from the DOM if the peer has been disconnected
       console.log(`Peer ${remotePeerId} has disconnected`);
-      this.videoElementsCounter--;
+      this.clearRemoteVideo(remotePeerId);
+      this.peerConnections[remotePeerId]?.close();
+      delete this.peerConnections[remotePeerId];
     }
+  }
+
+  dropCall() {
+    this.callJoining = false;
+    this.callJoined = false;
+
+    Object.keys(this.peerConnections).forEach((remotePeerId) => {
+      this.peerConnections[remotePeerId]?.close();
+      this.clearRemoteVideo(remotePeerId);
+      delete this.peerConnections[remotePeerId];
+    });
+
+    this.localStream?.getTracks()?.forEach((track: MediaStreamTrack) => {
+      track.stop();
+    });
+    this.localStream = undefined;
+    this.clearVideoElement(0);
   }
 
   /**
@@ -229,5 +252,39 @@ export class WebrtcService {
       senderId: this.connecTionService.localPeerId,
       receiverId: remotePeerId
     })
+  }
+
+  private getNextRemoteVideoSlot(): number {
+    const occupiedSlots = new Set(Object.values(this.remoteVideoSlots));
+    for (let index = 1; index < this.videoElements.length; index++) {
+      if (!occupiedSlots.has(index)) {
+        return index;
+      }
+    }
+
+    return -1;
+  }
+
+  private clearRemoteVideo(remotePeerId: string) {
+    const slotIndex = this.remoteVideoSlots[remotePeerId];
+    if (slotIndex === undefined) {
+      return;
+    }
+
+    this.clearVideoElement(slotIndex);
+    delete this.remoteVideoSlots[remotePeerId];
+  }
+
+  private clearVideoElement(index: number) {
+    const videoElement = this.videoElements[index];
+    if (!videoElement) {
+      return;
+    }
+
+    videoElement.pause?.();
+    videoElement.srcObject = null;
+    videoElement.removeAttribute('src');
+    videoElement.load?.();
+    videoElement.style.backgroundColor = 'transparent';
   }
 }

@@ -27,6 +27,7 @@
 
     .join-call-button {
         margin-top: 0.75rem;
+        margin-right: 0.5rem;
         padding: 0.65rem 0.9rem;
         border: none;
         border-radius: 999px;
@@ -38,6 +39,22 @@
 
     .join-call-button:disabled {
         background-color: #5d748c;
+        cursor: default;
+    }
+
+    .drop-call-button {
+        margin-top: 0.75rem;
+        padding: 0.65rem 0.9rem;
+        border: none;
+        border-radius: 999px;
+        background-color: #7b1f1f;
+        color: #fff;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .drop-call-button:disabled {
+        background-color: #b58585;
         cursor: default;
     }
 

@@ -39,4 +39,9 @@ export class GameInfoComponent implements AfterViewInit{
     await this.webRtcService.setLocalStream();
     this.triggerChanges();
   }
+
+  dropCall(): void {
+    this.webRtcService.dropCall();
+    this.triggerChanges();
+  }
 }

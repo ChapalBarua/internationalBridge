@@ -18,6 +18,13 @@
             (click)="joinCall()">
             {{ webRtcService.callJoined ? 'Joined Call' : (webRtcService.callJoining ? 'Joining Call...' : 'Join Call') }}
         </button>
+        <button
+            class="drop-call-button"
+            type="button"
+            [disabled]="!webRtcService.callJoined || webRtcService.callJoining"
+            (click)="dropCall()">
+            Drop Call
+        </button>
     </div>
     <div class="video-1">
         <video id="video-1" autoplay playsinline></video>
