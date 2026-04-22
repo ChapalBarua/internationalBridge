@@ -3,7 +3,10 @@ import type { CapacitorConfig } from '@capacitor/cli';
 const config: CapacitorConfig = {
   appId: 'com.bridge.app',
   appName: 'international-bridge',
-  webDir: 'dist/internationalBridge/browser'
+  webDir: 'dist/internationalBridge/browser',
+  ios: {
+    zoomEnabled: true
+  }
 };
 
 export default config;

@@ -96,6 +96,8 @@ export class WebrtcService {
       stream = await navigator.mediaDevices.getUserMedia(this.mediaConstraints);
     } catch (error) {
       console.error('Could not get user media', error);
+      alert(`Could not access camera/microphone: ${error instanceof Error ? error.message : String(error)}`);
+      return;
     };
     this.localStream = stream;
     this.videoElements[this.videoElementsCounter].srcObject = stream;
