@@ -9,6 +9,7 @@ import { CardService } from 'src/app/service/card.service';
   styleUrl: './game-info.component.css'
 })
 export class GameInfoComponent implements AfterViewInit{
+  private exitTriggered = false;
 
   constructor(
     public webRtcService: WebrtcService,
@@ -43,5 +44,26 @@ export class GameInfoComponent implements AfterViewInit{
   dropCall(): void {
     this.webRtcService.dropCall();
     this.triggerChanges();
+  }
+
+  async exitToLobby(): Promise<void> {
+    if (this.exitTriggered) {
+      return;
+    }
+
+    this.exitTriggered = true;
+    alert('Exit to Lobby tapped');
+    this.webRtcService.dropCall();
+    try {
+      await this.connectionService.leaveRoom();
+    } finally {
+      this.exitTriggered = false;
+    }
+  }
+
+  onExitTouch(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    void this.exitToLobby();
   }
 }

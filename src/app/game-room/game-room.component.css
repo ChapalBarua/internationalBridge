@@ -1,13 +1,17 @@
 .game-room {
     display: grid;
     grid-template-columns: 6fr 4fr;
+    height: 100dvh;
+    overflow: hidden;
     .bridge-table {
         width: 59vw;
-        height: 100vh;
+        height: 100dvh;
+        min-height: 0;
     }
     .game-info {
         width: 41vw;
-        height: 100vh;
+        height: 100dvh;
+        min-height: 0;
     }
 }
 
@@ -16,18 +20,21 @@
 @media screen and (orientation:portrait) {
     .game-room {
         grid-template-columns: 1fr;
-        grid-template-rows: 6fr 4fr;
+        grid-template-rows: minmax(0, 58dvh) minmax(0, 42dvh);
+        height: 100dvh;
         .bridge-table  {
             grid-column: 1;
             grid-row: 1;
             width: 100vw;
-            height: 60vh;
+            height: 58dvh;
+            min-height: 0;
         }
         .game-info {
             grid-column: 1;
             grid-row: 2;
             width: 100vw;
-            height: 40vh;
+            height: 42dvh;
+            min-height: 0;
         }
     }
 }

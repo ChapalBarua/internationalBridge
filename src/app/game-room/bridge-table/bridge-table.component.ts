@@ -194,7 +194,13 @@ export class BridgeTableComponent implements AfterViewInit{
 
   openDialog(): void {
     if(this.connectionService.activePlayerSerial!='one') return;
-    const dialogRef = this.dialog.open(BridgeCallComponent, { disableClose: true, data: this.connectionService.players });
+    const dialogRef = this.dialog.open(BridgeCallComponent, {
+      disableClose: true,
+      data: this.connectionService.players,
+      panelClass: 'bridge-call-dialog-panel',
+      width: 'min(10rem, 44vw)',
+      maxWidth: '44vw'
+    });
 
     dialogRef.afterClosed().subscribe((result: CallInfo) => {
       this.cardService.onDecidedCall(result);

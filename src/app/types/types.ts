@@ -140,6 +140,13 @@ export interface UserTracker { // this is the tracking data of all connected use
   activeUsers : number
 }
 
+export interface ActiveRoomSummary {
+  roomId: string,
+  usersOnTable: number,
+  availableSeats: number,
+  players: string[]
+}
+
 export interface ShownCards { // server broadcasts the shown cards to everyone in the room
   serial: Serial,
   cards: Card[]

@@ -7,24 +7,38 @@
         Opponent points - {{cardService.opponentTeamPoints}}
     </div>
     <div class="points-right">
-        Room No - {{ connectionService.roomId}}<br>
-        Connected Users - {{ connectionService.serverUsers.connectedUsers}}<br>
-        Active Users - {{ connectionService.serverUsers.activeUsers }}<br>
-        Games:  &#160; Team 1: {{cardService.activeGamesByTeam1}}, &#160; Team2: {{cardService.activeGamesByTeam2}}<br>
-        <button
-            class="join-call-button"
-            type="button"
-            [disabled]="webRtcService.callJoined || webRtcService.callJoining"
-            (click)="joinCall()">
-            {{ webRtcService.callJoined ? 'Joined Call' : (webRtcService.callJoining ? 'Joining Call...' : 'Join Call') }}
-        </button>
-        <button
-            class="drop-call-button"
-            type="button"
-            [disabled]="!webRtcService.callJoined || webRtcService.callJoining"
-            (click)="dropCall()">
-            Drop Call
-        </button>
+        <div class="room-meta">
+            <div>Room No - {{ connectionService.roomId }}</div>
+            <div>Connected Users - {{ connectionService.serverUsers.connectedUsers }}</div>
+            <div>Active Users - {{ connectionService.serverUsers.activeUsers }}</div>
+            <div>Games: Team 1: {{ cardService.activeGamesByTeam1 }}, Team 2: {{ cardService.activeGamesByTeam2 }}</div>
+        </div>
+        <div class="room-actions">
+            <button
+                class="join-call-button"
+                type="button"
+                [disabled]="webRtcService.callJoined || webRtcService.callJoining"
+                (click)="joinCall()">
+                <span class="action-label-full">{{ webRtcService.callJoined ? 'Joined Call' : (webRtcService.callJoining ? 'Joining Call...' : 'Join Call') }}</span>
+                <span class="action-label-compact">{{ webRtcService.callJoined ? 'Joined' : (webRtcService.callJoining ? 'Joining' : 'Join') }}</span>
+            </button>
+            <button
+                class="drop-call-button"
+                type="button"
+                [disabled]="!webRtcService.callJoined || webRtcService.callJoining"
+                (click)="dropCall()">
+                <span class="action-label-full">Drop Call</span>
+                <span class="action-label-compact">Drop</span>
+            </button>
+            <button
+                class="exit-lobby-button"
+                type="button"
+                (click)="exitToLobby()"
+                (touchend)="onExitTouch($event)">
+                <span class="action-label-full">Exit to Lobby</span>
+                <span class="action-label-compact">Lobby</span>
+            </button>
+        </div>
     </div>
     <div class="video-1">
         <video id="video-1" autoplay playsinline></video>

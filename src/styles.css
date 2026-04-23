@@ -2,3 +2,103 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.bridge-call-dialog-panel.cdk-overlay-pane {
+    position: fixed !important;
+    top: 50% !important;
+    right: auto !important;
+    left: 29.5vw !important;
+    transform: translate(-50%, -50%);
+}
+
+.bridge-call-dialog-panel .mat-mdc-dialog-container .mdc-dialog__surface {
+    border-radius: 0.35rem;
+}
+
+.bridge-call-dialog-panel .mat-mdc-form-field-subscript-wrapper {
+    display: none;
+}
+
+.bridge-call-dialog-panel .mat-mdc-dialog-container .mdc-dialog__surface,
+.bridge-call-dialog-panel .mat-mdc-dialog-content,
+.bridge-call-dialog-panel .mat-mdc-dialog-actions {
+    overflow: hidden;
+}
+
+.bridge-call-dialog-panel .mat-mdc-dialog-content {
+    max-height: none;
+}
+
+.bridge-call-dialog-panel .mat-mdc-form-field {
+    --mat-form-field-container-height: 1.85rem;
+    --mat-form-field-container-vertical-padding: 0.25rem;
+}
+
+.bridge-call-dialog-panel .mat-mdc-form-field-infix {
+    min-height: 1.85rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+}
+
+.bridge-call-dialog-panel .mat-mdc-text-field-wrapper {
+    padding-left: 0.45rem;
+    padding-right: 0.2rem;
+}
+
+.bridge-call-dialog-panel .mat-mdc-form-field,
+.bridge-call-dialog-panel .mat-mdc-select-value,
+.bridge-call-dialog-panel .mat-mdc-floating-label {
+    font-size: 0.62rem;
+}
+
+.bridge-call-dialog-panel .mat-mdc-dialog-actions .mat-mdc-button-base {
+    min-width: 2.2rem;
+    height: 1.45rem;
+    padding: 0 0.45rem;
+    font-size: 0.62rem;
+}
+
+@media screen and (orientation:portrait) {
+    .bridge-call-dialog-panel.cdk-overlay-pane {
+        top: 29dvh !important;
+        right: auto !important;
+        bottom: auto !important;
+        left: 50% !important;
+        width: min(9rem, 38vw) !important;
+        max-width: 38vw !important;
+        transform: translate(-50%, -50%);
+    }
+
+    .bridge-call-dialog-panel .mat-mdc-dialog-container .mdc-dialog__surface {
+        max-height: 24vh;
+    }
+
+    .bridge-call-dialog-panel .mat-mdc-form-field {
+        --mat-form-field-container-height: 1.65rem;
+        --mat-form-field-container-vertical-padding: 0.18rem;
+    }
+
+    .bridge-call-dialog-panel .mat-mdc-form-field-infix {
+        min-height: 1.65rem;
+        padding-top: 0.18rem;
+        padding-bottom: 0.18rem;
+    }
+
+    .bridge-call-dialog-panel .mat-mdc-form-field,
+    .bridge-call-dialog-panel .mat-mdc-select-value,
+    .bridge-call-dialog-panel .mat-mdc-floating-label {
+        font-size: 0.58rem;
+    }
+}
+
+@media screen and (orientation:landscape) {
+    .bridge-call-dialog-panel.cdk-overlay-pane {
+        width: min(10rem, 20vw) !important;
+        max-width: 20vw !important;
+    }
+
+    .bridge-call-dialog-panel .mat-mdc-form-field {
+        --mat-form-field-container-height: 1.85rem;
+        --mat-form-field-container-vertical-padding: 0.25rem;
+    }
+}

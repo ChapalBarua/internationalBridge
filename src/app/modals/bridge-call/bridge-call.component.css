@@ -1,0 +1,43 @@
+h2[mat-dialog-title] {
+    margin: 0;
+    padding: 0.28rem 0.45rem 0;
+    font-size: 0.72rem;
+    line-height: 1.2;
+}
+
+mat-dialog-content {
+    padding: 0 0.45rem;
+}
+
+form {
+    display: grid;
+    gap: 0.05rem;
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+mat-dialog-actions {
+    min-height: auto;
+    padding: 0 0.45rem 0.25rem;
+}
+
+@media screen and (orientation:portrait) {
+    h2[mat-dialog-title] {
+        padding-top: 0.22rem;
+        font-size: 0.68rem;
+    }
+
+    mat-dialog-content {
+        padding: 0 0.4rem;
+    }
+
+    form {
+        gap: 0.03rem;
+    }
+
+    mat-dialog-actions {
+        padding: 0 0.4rem 0.2rem;
+    }
+}

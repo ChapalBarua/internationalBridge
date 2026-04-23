@@ -126,9 +126,7 @@ export class WebrtcService {
 
     this.localStream = stream;
     const localVideoElement = this.videoElements[0];
-    localVideoElement.srcObject = stream;
-    localVideoElement.volume = 0;
-    localVideoElement.muted = true;
+    this.attachStreamToVideoElement(localVideoElement, stream, true);
     this.callJoined = true;
     this.callJoining = false;
     this.socket.emit('start_call', {
@@ -160,9 +158,7 @@ export class WebrtcService {
 
       this.remoteVideoSlots[remotePeerId] = slotIndex;
       const videoRemote = this.videoElements[slotIndex];
-      videoRemote.srcObject = event.streams[0];
-      videoRemote.setAttribute('autoplay', '');
-      videoRemote.style.backgroundColor = 'transparent';
+      this.attachStreamToVideoElement(videoRemote, event.streams[0], false);
     }
   }
 
@@ -286,5 +282,42 @@ export class WebrtcService {
     videoElement.removeAttribute('src');
     videoElement.load?.();
     videoElement.style.backgroundColor = 'transparent';
+  }
+
+  private attachStreamToVideoElement(videoElement: HTMLVideoElement, stream: MediaStream, muted: boolean) {
+    if (!videoElement) {
+      return;
+    }
+
+    videoElement.srcObject = stream;
+    videoElement.autoplay = true;
+    videoElement.playsInline = true;
+    videoElement.muted = muted;
+    videoElement.volume = muted ? 0 : 1;
+    videoElement.setAttribute('autoplay', '');
+    videoElement.setAttribute('playsinline', '');
+    videoElement.style.backgroundColor = 'transparent';
+
+    const tryPlay = () => {
+      videoElement.play().catch((error) => {
+        console.warn('Video playback start was blocked', error);
+        if (!videoElement.muted) {
+          videoElement.muted = true;
+          videoElement.volume = 0;
+          videoElement.play().catch((mutedError) => {
+            console.warn('Muted video playback also failed', mutedError);
+          });
+        }
+      });
+    };
+
+    if (videoElement.readyState >= HTMLMediaElement.HAVE_METADATA) {
+      tryPlay();
+      return;
+    }
+
+    videoElement.onloadedmetadata = () => {
+      tryPlay();
+    };
   }
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { NotificationService, NotificationType } from './notification.service';
-import { OrientationSerialMapping, RoomJoin, Serial, SerialNameMapping, UserTracker } from '../types/types';
+import { ActiveRoomSummary, OrientationSerialMapping, RoomJoin, Serial, SerialNameMapping, UserTracker } from '../types/types';
 import { BehaviorSubject, Subject } from 'rxjs';
 import * as _ from 'lodash';
 import { Router } from '@angular/router';
@@ -84,6 +84,7 @@ export class ConnectionService {
 
   onOwnerJoiningRoom$: BehaviorSubject<boolean> = new BehaviorSubject(true);
   onRoomUsersChange$: BehaviorSubject<boolean>  = new BehaviorSubject(true); // notifies others when a user enters leaves room
+  activeRooms$: BehaviorSubject<ActiveRoomSummary[]> = new BehaviorSubject<ActiveRoomSummary[]>([]);
 
 
   constructor(private socket: Socket, private notificationService: NotificationService, private router: Router) {
@@ -91,6 +92,7 @@ export class ConnectionService {
      this.socket.on("connect", () => {
       this.notificationService.sendMessage({message: `Connected. Welcome to the Card Game Website` , type: NotificationType.info});
       this.connected = true;
+      this.requestActiveRooms();
     });
     
     this.socket.on("disconnect", () => {
@@ -142,6 +144,10 @@ export class ConnectionService {
      // listening to event when owner fails to join because the room is full
      this.socket.fromEvent<UserTracker>('capacity_full').subscribe(()=>{
       this.notificationService.sendMessage({message: `Failed to join - the room is full` , type: NotificationType.error});
+    });
+
+    this.socket.fromEvent<ActiveRoomSummary[]>('active_rooms').subscribe((rooms) => {
+      this.activeRooms$.next(rooms);
     });
    }
 
@@ -205,6 +211,62 @@ export class ConnectionService {
   joinRoom(roomId: string, userName: string){
     if(this.roomId) return;
     this.socket.emit('join', {room: roomId, peerUUID: this.localPeerId, userName: userName});
+  }
+
+  requestActiveRooms() {
+    this.socket.emit('request_active_rooms');
+  }
+
+  createRoom(userName: string) {
+    const roomId = this.generateRoomId();
+    this.joinRoom(roomId, userName);
+    return roomId;
+  }
+
+  async leaveRoom() {
+    alert('leaveRoom() started');
+    if (this.roomId) {
+      this.socket.emit('leave_room');
+    }
+
+    this.resetRoomState();
+    this.requestActiveRooms();
+    this.notificationService.sendMessage({message: `Returned to lobby` , type: NotificationType.info});
+
+    alert('Attempting Angular navigation to /login');
+    const navigated = await this.router.navigateByUrl('/login', { replaceUrl: true });
+
+    // iOS WKWebView can occasionally ignore SPA route updates even though the click fired.
+    // Fall back to a hard redirect so the user always leaves the game room.
+    if (!navigated || this.router.url !== '/login') {
+      alert('Angular navigation did not finish, forcing redirect');
+      window.location.replace('/login');
+    }
+  }
+
+  private generateRoomId(): string {
+    const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    return Array.from({ length: 6 }, () => alphabet[Math.floor(Math.random() * alphabet.length)]).join('');
+  }
+
+  private resetRoomState() {
+    this.localPeerId = '';
+    this.roomId = '';
+    this.activePlayerName = 'player one';
+    this.activePlayerSerial = 'one';
+    this.players = {
+      one : 'player one',
+      two: 'player two',
+      three: 'player three',
+      four: 'player four'
+    };
+    this.playerBottomName = 'player one';
+    this.playerLeftName = 'player two';
+    this.playerTopName = 'player three';
+    this.playerRightName = 'player four';
+    localStorage.removeItem('serial');
+    localStorage.removeItem('roomId');
+    localStorage.removeItem('userName');
   }
 
   calculateOrientationToSerialMapping(){

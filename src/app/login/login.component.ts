@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { ConnectionService } from '../service/connection.service';
+import { ActiveRoomSummary } from '../types/types';
 
 @Component({
   selector: 'app-login',
@@ -9,22 +10,38 @@ import { ConnectionService } from '../service/connection.service';
 })
 export class LoginComponent {
   public loginForm!: FormGroup;
+  activeRooms: ActiveRoomSummary[] = [];
 
   constructor(public connectionService: ConnectionService, private fb: FormBuilder) {}
 
   ngOnInit() {
     this.loginForm = this.fb.group({
       name: ['', [Validators.required, nameValidator]],
-      roomId: ['', Validators.required],
+      roomId: [''],
     });
+
+    this.connectionService.activeRooms$.subscribe((rooms) => {
+      this.activeRooms = rooms;
+    });
+    this.connectionService.requestActiveRooms();
   }
 
   public onSubmit() {
-    this.connectionService.joinRoom(this.loginForm.get('roomId')?.value, this.loginForm.get('name')?.value);
+    const selectedRoomId = this.loginForm.get('roomId')?.value;
+    if (!selectedRoomId) {
+      return;
+    }
+
+    this.connectionService.joinRoom(selectedRoomId, this.loginForm.get('name')?.value);
+  }
+
+  public createRoom() {
+    this.connectionService.createRoom(this.loginForm.get('name')?.value);
   }
 }
 
 function nameValidator(control: AbstractControl): ValidationErrors | null{
+  if(!control.value) return null;
   if(avoidableNames.includes(control.value.toLowerCase())){
     return {
       invalidName: {message: "Invalid User Name"}
