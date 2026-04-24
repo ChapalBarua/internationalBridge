@@ -12,7 +12,7 @@
             <app-player #playerRight  [orientation]="'right'" [serial]="playerRightSerial" [active]="activeCardsSerial===playerRightSerial"></app-player>
         </div>
         
-        <app-table-middle [canShuffle]="canShuffle" [nextPlayer]="nextPlayer" class="table-middle"/>
+        <app-table-middle [canShuffle]="canShuffle" [nextPlayer]="nextPlayer" [playerBids]="biddingLabels" class="table-middle"/>
         
         <div class="player-bottom">
             <app-player #playerBottom  [orientation]="'bottom'" [serial]="playerBottomSerial" [active]="activeCardsSerial===playerBottomSerial"></app-player>

@@ -183,6 +183,14 @@
     color: #ffffff !important;
 }
 
+.primary-action:disabled {
+    background: #8fa39d !important;
+    color: rgba(255, 255, 255, 0.78) !important;
+    cursor: not-allowed;
+    box-shadow: none;
+    opacity: 1;
+}
+
 .secondary-action {
     border-color: rgba(13, 59, 50, 0.38) !important;
     color: var(--felt) !important;

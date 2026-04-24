@@ -89,7 +89,8 @@ export interface BiddingState {
   nextBidder: Serial | '',
   highestBid: CallInfo | null,
   consecutivePasses: number,
-  canPass: boolean
+  canPass: boolean,
+  playerBids: Record<Serial, string>
 }
 
 export type tables = table[];
@@ -168,6 +169,11 @@ export interface InvalidCardPlay {
 
 export interface InvalidBid {
   reason: string
+}
+
+export interface BiddingPassedOut {
+  penalizedBidder: Serial,
+  message: string
 }
 
 

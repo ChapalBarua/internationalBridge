@@ -15,6 +15,12 @@ import { ConnectionService } from 'src/app/service/connection.service';
 export class BridgeTableComponent implements AfterViewInit{
   title = 'internationalBridge';
   activeCardsSerial: Serial | '' = ''; // indicates which cards can be played by owner. if empty - owner cant play
+  biddingLabels: Record<Serial, string> = {
+    one: '',
+    two: '',
+    three: '',
+    four: ''
+  };
 
   nextPlayer: Orientation | string = ''; // sets marker for next player
 
@@ -230,16 +236,25 @@ export class BridgeTableComponent implements AfterViewInit{
   }
 
   handleBiddingState(biddingState: BiddingState | null){
+    this.biddingLabels = biddingState?.playerBids || {
+      one: '',
+      two: '',
+      three: '',
+      four: ''
+    };
+
     const isMyTurnToBid = biddingState?.nextBidder === this.connectionService.activePlayerSerial;
 
     if(!isMyTurnToBid){
       this.biddingDialogRef?.close();
+      this.changeDetector.detectChanges();
       return;
     }
 
     if(biddingState){
       this.openDialog(biddingState);
     }
+    this.changeDetector.detectChanges();
   }
 
   showPointsModal(): void{

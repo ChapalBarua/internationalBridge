@@ -13,6 +13,6 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-button type="button" [disabled]="!data.highestBid" (click)="onPass()">Pass</button>
+  <button mat-button type="button" (click)="onPass()">Pass</button>
   <button mat-button type="button" [disabled]="!bidOptions.length" (click)="onBid()" cdkFocusInitial>Bid</button>
 </mat-dialog-actions>

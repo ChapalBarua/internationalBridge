@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { Card, PlayedCard, ShownCards, CallInfo, NextPlay, Points, CardsOnTable, InvalidCardPlay, BiddingState, InvalidBid } from '../types/types';
+import { Card, PlayedCard, ShownCards, CallInfo, NextPlay, Points, CardsOnTable, InvalidCardPlay, BiddingState, InvalidBid, BiddingPassedOut } from '../types/types';
 import { Socket } from 'ngx-socket-io';
 import { NotificationService, NotificationType } from './notification.service';
 import { ConnectionService } from './connection.service';
@@ -105,6 +105,10 @@ export class CardService {
 
     this.socket.fromEvent<InvalidBid>('invalid_bid').subscribe(({ reason }: InvalidBid)=>{
       this.notificationService.sendMessage({message: reason, type: NotificationType.error});
+    });
+
+    this.socket.fromEvent<BiddingPassedOut>('bidding_passed_out').subscribe(({ message }: BiddingPassedOut)=>{
+      this.notificationService.sendMessage({message, type: NotificationType.warning});
     });
 
     // can_shuffle

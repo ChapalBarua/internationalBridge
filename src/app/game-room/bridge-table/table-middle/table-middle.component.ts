@@ -27,6 +27,14 @@ export class TableMiddleComponent{
   @Input()
   nextPlayer: Orientation | string = '';
 
+  @Input()
+  playerBids: Record<Serial, string> = {
+    one: '',
+    two: '',
+    three: '',
+    four: ''
+  };
+
   /**
  * notify server after shuffle button is pressed
  */
