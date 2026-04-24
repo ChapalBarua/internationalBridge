@@ -152,6 +152,10 @@ export interface ShownCards { // server broadcasts the shown cards to everyone i
   cards: Card[]
 }
 
+export interface InvalidCardPlay {
+  reason: string
+}
+
 
 /**
  * events appendix

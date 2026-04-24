@@ -224,7 +224,6 @@ export class ConnectionService {
   }
 
   async leaveRoom() {
-    alert('leaveRoom() started');
     if (this.roomId) {
       this.socket.emit('leave_room');
     }
@@ -233,13 +232,11 @@ export class ConnectionService {
     this.requestActiveRooms();
     this.notificationService.sendMessage({message: `Returned to lobby` , type: NotificationType.info});
 
-    alert('Attempting Angular navigation to /login');
     const navigated = await this.router.navigateByUrl('/login', { replaceUrl: true });
 
     // iOS WKWebView can occasionally ignore SPA route updates even though the click fired.
     // Fall back to a hard redirect so the user always leaves the game room.
     if (!navigated || this.router.url !== '/login') {
-      alert('Angular navigation did not finish, forcing redirect');
       window.location.replace('/login');
     }
   }

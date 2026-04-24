@@ -52,7 +52,6 @@ export class GameInfoComponent implements AfterViewInit{
     }
 
     this.exitTriggered = true;
-    alert('Exit to Lobby tapped');
     this.webRtcService.dropCall();
     try {
       await this.connectionService.leaveRoom();

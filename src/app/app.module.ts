@@ -23,13 +23,9 @@ import { GameInfoComponent } from './game-room/game-info/game-info.component';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
-const serverUrl = 'https://www.chapalbarua.com:3000';
-const localServerUrl = 'https://localhost:3000';
-
-const localServerUrl2 = 'https://10.0.0.19:3000';
-
-const config: SocketIoConfig = { url: serverUrl, options: { autoConnect: true} };
+const config: SocketIoConfig = { url: environment.socketUrl, options: { autoConnect: true } };
 
 @NgModule({
   declarations: [

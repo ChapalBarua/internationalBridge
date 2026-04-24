@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { Card, PlayedCard, ShownCards, CallInfo, NextPlay, Points, CardsOnTable } from '../types/types';
+import { Card, PlayedCard, ShownCards, CallInfo, NextPlay, Points, CardsOnTable, InvalidCardPlay } from '../types/types';
 import { Socket } from 'ngx-socket-io';
 import { NotificationService, NotificationType } from './notification.service';
 import { ConnectionService } from './connection.service';
@@ -30,6 +30,7 @@ export class CardService {
   });
   
   roundComplete$ = new Subject();
+  pendingPlayValidation$ = new BehaviorSubject<boolean>(false);
   playedCard$ = new BehaviorSubject<PlayedCard>({serial: 'one', card: null, playedBy: 'one'});
   unPlayedCard$ = new BehaviorSubject<PlayedCard>({serial: 'one', card: null, playedBy: 'one'});
   nextPlayer$ = new BehaviorSubject<NextPlay | null>(null);
@@ -63,8 +64,15 @@ export class CardService {
 
     // listening to event when a card is played
     this.socket.fromEvent<PlayedCard>('played_card').subscribe((card: PlayedCard)=>{
+      this.pendingPlayValidation$.next(false);
       this.placeCardOnTable(card);
       this.playedCard$.next(card);
+
+      if(card.playedBy === this.connectionService.activePlayerSerial && Object.keys(this.cardsOnTable).length === 4){
+        setTimeout(()=>{
+          this.finishRound();
+        },4000);
+      }
     });
 
     // listening to event when a card is unplayed
@@ -78,8 +86,14 @@ export class CardService {
       this.showCards$.next(cards);
     });
 
+    this.socket.fromEvent<InvalidCardPlay>('invalid_card_play').subscribe(({ reason }: InvalidCardPlay)=>{
+      this.pendingPlayValidation$.next(false);
+      this.notificationService.sendMessage({message: reason, type: NotificationType.error});
+    });
+
     // can_shuffle
     this.socket.fromEvent<boolean>('can_shuffle').subscribe((canShuffle: boolean)=>{
+      this.pendingPlayValidation$.next(false);
       this.clearTable();
       this.canShuffle$.next(canShuffle);
     });
@@ -112,14 +126,12 @@ export class CardService {
    * notifies server that the user has played one particular card
    */
   playCard(playedCard: PlayedCard){
-    if(this.placeCardOnTable(playedCard)){ // if there is no card played from that slot - emit event. Else - do nothing
-      this.socket.emit('playCard', playedCard);
-      if(Object.keys(this.cardsOnTable).length===4){
-        setTimeout(()=>{
-          this.finishRound();
-        },4000);
-      }
+    if(this.pendingPlayValidation$.value){
+      return;
     }
+
+    this.pendingPlayValidation$.next(true);
+    this.socket.emit('playCard', playedCard);
   }
 
   /**
