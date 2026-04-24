@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { Card, PlayedCard, ShownCards, CallInfo, NextPlay, Points, CardsOnTable, InvalidCardPlay } from '../types/types';
+import { Card, PlayedCard, ShownCards, CallInfo, NextPlay, Points, CardsOnTable, InvalidCardPlay, BiddingState, InvalidBid } from '../types/types';
 import { Socket } from 'ngx-socket-io';
 import { NotificationService, NotificationType } from './notification.service';
 import { ConnectionService } from './connection.service';
@@ -34,6 +34,7 @@ export class CardService {
   playedCard$ = new BehaviorSubject<PlayedCard>({serial: 'one', card: null, playedBy: 'one'});
   unPlayedCard$ = new BehaviorSubject<PlayedCard>({serial: 'one', card: null, playedBy: 'one'});
   nextPlayer$ = new BehaviorSubject<NextPlay | null>(null);
+  biddingState$ = new BehaviorSubject<BiddingState | null>(null);
   getUpdatedPoints$ = new BehaviorSubject(false); // observer to notify taking points input
 
   gameInfoUpdate$ = new Subject();
@@ -46,6 +47,8 @@ export class CardService {
     // listening to event when card is distributed 
     this.socket.fromEvent<Card[]>('distribute_cards').subscribe((cards: Card[])=>{
       this.clearTable();
+      this.currentCall = 'No bid yet';
+      this.biddingState$.next(null);
       this.shuffle$.next(cards);
     });
 
@@ -60,6 +63,15 @@ export class CardService {
         this.clearTable();
       }
       this.nextPlayer$.next(nextPlay);
+    });
+
+    this.socket.fromEvent<BiddingState | null>('bidding_state').subscribe((biddingState: BiddingState | null)=>{
+      this.biddingState$.next(biddingState);
+
+      if(biddingState?.nextBidder){
+        const bidderName = this.connectionService.players[biddingState.nextBidder];
+        this.notificationService.sendMessage({message: `${bidderName}'s turn to bid`, type: NotificationType.info});
+      }
     });
 
     // listening to event when a card is played
@@ -91,10 +103,15 @@ export class CardService {
       this.notificationService.sendMessage({message: reason, type: NotificationType.error});
     });
 
+    this.socket.fromEvent<InvalidBid>('invalid_bid').subscribe(({ reason }: InvalidBid)=>{
+      this.notificationService.sendMessage({message: reason, type: NotificationType.error});
+    });
+
     // can_shuffle
     this.socket.fromEvent<boolean>('can_shuffle').subscribe((canShuffle: boolean)=>{
       this.pendingPlayValidation$.next(false);
       this.clearTable();
+      this.biddingState$.next(null);
       this.canShuffle$.next(canShuffle);
     });
 

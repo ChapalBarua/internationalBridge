@@ -75,11 +75,21 @@ export interface OrientationSerialMapping {
 
 // will be used by server
 
+export type BidColor = CardType | 'nt';
+
 // details about call
 export interface CallInfo {
-  color: string,
+  color: BidColor,
   call: number,
-  personCalled: Serial
+  personCalled: Serial,
+  pass?: boolean
+}
+
+export interface BiddingState {
+  nextBidder: Serial | '',
+  highestBid: CallInfo | null,
+  consecutivePasses: number,
+  canPass: boolean
 }
 
 export type tables = table[];
@@ -153,6 +163,10 @@ export interface ShownCards { // server broadcasts the shown cards to everyone i
 }
 
 export interface InvalidCardPlay {
+  reason: string
+}
+
+export interface InvalidBid {
   reason: string
 }
 

@@ -33,7 +33,4 @@
     <button mat-raised-button  class="undo" (click)="onUndoMove()" [disabled]="!cardService.undoAble">
         Undo last move
     </button>
-    <button mat-raised-button *ngIf="connectionService.activePlayerSerial==='one'" class="reshuffle" (click)="onshuffle()" [disabled]="!canShuffle">
-        Shuffle
-    </button>
 </div>

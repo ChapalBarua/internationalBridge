@@ -1,10 +1,10 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
-import { CallInfo, Card, NextPlay, Orientation, PlayedCard, Serial, ShownCards, getBlankSet } from '../../types/types';
+import { BiddingState, CallInfo, Card, NextPlay, Orientation, PlayedCard, Serial, ShownCards, getBlankSet } from '../../types/types';
 import { PlayerComponent } from './player/player.component';
 import { CardService } from '../../service/card.service';
 import { BridgeCallComponent } from '../../modals/bridge-call/bridge-call.component';
 import { PointsComponent } from '../../modals/points/points.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ConnectionService } from 'src/app/service/connection.service';
 
 @Component({
@@ -37,6 +37,8 @@ export class BridgeTableComponent implements AfterViewInit{
   playerRightName: string = 'player four';
   playerRightSerial: Serial = 'four';
 
+  private biddingDialogRef?: MatDialogRef<BridgeCallComponent, CallInfo | undefined>;
+
   public setundoAble(flag: boolean){
     this.cardService.undoAble = flag;
     this.changeDetector.detectChanges();
@@ -59,7 +61,6 @@ export class BridgeTableComponent implements AfterViewInit{
       if(cards.length){
         this.playerBottom.cards = cards;
         this.playerBottom.cardShown = true;
-        this.openDialog();
       };
     });
 
@@ -81,6 +82,10 @@ export class BridgeTableComponent implements AfterViewInit{
     this.cardService.canShuffle$.subscribe((canShuffle)=>{
       this.resetTable();
       this.canShuffle = canShuffle;
+      if(canShuffle && this.connectionService.activePlayerSerial === 'one'){
+        this.canShuffle = false;
+        this.cardService.shuffleCard();
+      }
     });
 
     
@@ -98,6 +103,10 @@ export class BridgeTableComponent implements AfterViewInit{
         this.deactivateAllCards();
       }
       this.activateCards(nextPlay);
+    });
+
+    this.cardService.biddingState$.subscribe((biddingState)=>{
+      this.handleBiddingState(biddingState);
     });
 
     // show cards of the player
@@ -192,19 +201,45 @@ export class BridgeTableComponent implements AfterViewInit{
     this.changeDetector.detectChanges();
   }
 
-  openDialog(): void {
-    if(this.connectionService.activePlayerSerial!='one') return;
+  openDialog(biddingState: BiddingState): void {
+    if(this.biddingDialogRef){
+      return;
+    }
+
     const dialogRef = this.dialog.open(BridgeCallComponent, {
       disableClose: true,
-      data: this.connectionService.players,
+      data: {
+        players: this.connectionService.players,
+        highestBid: biddingState.highestBid
+      },
       panelClass: 'bridge-call-dialog-panel',
       width: 'min(10rem, 44vw)',
       maxWidth: '44vw'
     });
+    this.biddingDialogRef = dialogRef;
 
-    dialogRef.afterClosed().subscribe((result: CallInfo) => {
-      this.cardService.onDecidedCall(result);
+    dialogRef.afterClosed().subscribe((result: CallInfo | undefined) => {
+      this.biddingDialogRef = undefined;
+      if(result){
+        this.cardService.onDecidedCall({
+          ...result,
+          personCalled: this.connectionService.activePlayerSerial
+        });
+      }
     });
+  }
+
+  handleBiddingState(biddingState: BiddingState | null){
+    const isMyTurnToBid = biddingState?.nextBidder === this.connectionService.activePlayerSerial;
+
+    if(!isMyTurnToBid){
+      this.biddingDialogRef?.close();
+      return;
+    }
+
+    if(biddingState){
+      this.openDialog(biddingState);
+    }
   }
 
   showPointsModal(): void{
