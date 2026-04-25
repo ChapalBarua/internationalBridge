@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { Card, PlayedCard, ShownCards, CallInfo, NextPlay, Points, CardsOnTable, InvalidCardPlay, BiddingState, InvalidBid, BiddingPassedOut } from '../types/types';
+import { Card, PlayedCard, ShownCards, CallInfo, NextPlay, Points, CardsOnTable, InvalidCardPlay, BiddingState, InvalidBid, BiddingPassedOut, GameScored } from '../types/types';
 import { Socket } from 'ngx-socket-io';
 import { NotificationService, NotificationType } from './notification.service';
 import { ConnectionService } from './connection.service';
@@ -9,8 +9,6 @@ import { ConnectionService } from './connection.service';
   providedIn: 'root'
 })
 export class CardService {
-  
-  public undoAble = false; // flag for undoing last move
 
   cardsOnTable: CardsOnTable = {};
 
@@ -32,11 +30,8 @@ export class CardService {
   roundComplete$ = new Subject();
   pendingPlayValidation$ = new BehaviorSubject<boolean>(false);
   playedCard$ = new BehaviorSubject<PlayedCard>({serial: 'one', card: null, playedBy: 'one'});
-  unPlayedCard$ = new BehaviorSubject<PlayedCard>({serial: 'one', card: null, playedBy: 'one'});
   nextPlayer$ = new BehaviorSubject<NextPlay | null>(null);
   biddingState$ = new BehaviorSubject<BiddingState | null>(null);
-  getUpdatedPoints$ = new BehaviorSubject(false); // observer to notify taking points input
-
   gameInfoUpdate$ = new Subject();
 
   constructor(
@@ -87,12 +82,6 @@ export class CardService {
       }
     });
 
-    // listening to event when a card is unplayed
-    this.socket.fromEvent<PlayedCard>('unplayed_card').subscribe((card: PlayedCard)=>{
-      this.removeCardFromTable(card);
-      this.unPlayedCard$.next(card);
-    });
-
     // listening to event when asked to show cards
     this.socket.fromEvent<ShownCards>('show_cards').subscribe((cards: ShownCards)=>{
       this.showCards$.next(cards);
@@ -111,18 +100,16 @@ export class CardService {
       this.notificationService.sendMessage({message, type: NotificationType.warning});
     });
 
+    this.socket.fromEvent<GameScored>('game_scored').subscribe(({ message }: GameScored)=>{
+      this.notificationService.sendMessage({message, type: NotificationType.success});
+    });
+
     // can_shuffle
     this.socket.fromEvent<boolean>('can_shuffle').subscribe((canShuffle: boolean)=>{
       this.pendingPlayValidation$.next(false);
       this.clearTable();
       this.biddingState$.next(null);
       this.canShuffle$.next(canShuffle);
-    });
-
-    // shows points modal
-    this.socket.fromEvent('get_updated_points').subscribe(()=>{
-      this.clearTable();
-      this.getUpdatedPoints$.next(true);
     });
 
     // server announces round_complete
@@ -156,25 +143,11 @@ export class CardService {
   }
 
   /**
-   * notifies server that the user has unplayed one particular card
-   */
-  unPlayCard(){
-    this.socket.emit('unplayCard', this.playedCard$.value);
-  }
-
-  /**
    * notifies server about the decided call
    */
 
   onDecidedCall(decidedCall: CallInfo){
     this.socket.emit('callDecided', decidedCall);
-  }
-
-  /**
-   * provides server updated points
-   */
-  gameComplete(points: Points){
-    this.socket.emit('completeGame', points);
   }
 
   /**
@@ -219,16 +192,6 @@ export class CardService {
       this.connectionService.middleTableChanges$.next(true);
       return true;
     }
-  }
-
-  /**
-   * @param removableCard - card that is unplayed
-   * updates cardsOnTable tracker
-   */
-  removeCardFromTable(removableCard: PlayedCard){
-    let cardOrientation = this.connectionService.serialToOrientationMapping[removableCard.serial];
-    delete this.cardsOnTable[cardOrientation as keyof CardsOnTable];
-    this.connectionService.middleTableChanges$.next(true);
   }
 
   clearTable(){

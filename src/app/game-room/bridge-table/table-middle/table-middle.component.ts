@@ -43,10 +43,6 @@ export class TableMiddleComponent{
     this.cardService.shuffleCard();
   }
 
-  onUndoMove(){
-    this.cardService.unPlayCard();
-  }
-
   triggerChanges(){
     this.changeDetector.detectChanges();
   }

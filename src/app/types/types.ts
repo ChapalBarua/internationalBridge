@@ -176,6 +176,18 @@ export interface BiddingPassedOut {
   message: string
 }
 
+export interface GameScored {
+  honorsPoints: {
+    team1: number,
+    team2: number
+  },
+  gamePoints: {
+    team1: number,
+    team2: number
+  },
+  message: string
+}
+
 
 /**
  * events appendix

@@ -3,7 +3,6 @@ import { BiddingState, CallInfo, Card, NextPlay, Orientation, PlayedCard, Serial
 import { PlayerComponent } from './player/player.component';
 import { CardService } from '../../service/card.service';
 import { BridgeCallComponent } from '../../modals/bridge-call/bridge-call.component';
-import { PointsComponent } from '../../modals/points/points.component';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ConnectionService } from 'src/app/service/connection.service';
 
@@ -44,12 +43,6 @@ export class BridgeTableComponent implements AfterViewInit{
   playerRightSerial: Serial = 'four';
 
   private biddingDialogRef?: MatDialogRef<BridgeCallComponent, CallInfo | undefined>;
-
-  public setundoAble(flag: boolean){
-    this.cardService.undoAble = flag;
-    this.changeDetector.detectChanges();
-    this.connectionService.middleTableChanges$.next(true);
-  }
 
   constructor(
     public cardService: CardService,
@@ -93,16 +86,6 @@ export class BridgeTableComponent implements AfterViewInit{
         this.cardService.shuffleCard();
       }
     });
-
-    
-    // show points modal when server asks for it- after 13*4 cards are played
-    this.cardService.getUpdatedPoints$.subscribe((update)=>{
-      if(update){
-        this.deactivateAllCards();
-        this.showPointsModal();
-      }
-    });
-
     // activates nextplayer cards only if current player is the active player
     this.cardService.nextPlayer$.subscribe((nextPlay)=>{
       if(nextPlay?.clearTable){ // indicates round is complete
@@ -144,8 +127,6 @@ export class BridgeTableComponent implements AfterViewInit{
     this.cardService.playedCard$.subscribe((playedCard: PlayedCard)=>{
       if(!playedCard.card) return;
       if(!playedCard.next) this.canCompleteRound = true;
-      // if this player played last card - activate undo button
-      this.setundoAble(playedCard.playedBy === this.connectionService.activePlayerSerial && Object.keys(this.cardService.cardsOnTable).length!=4);
       this.activateCards(playedCard?.next);
       let playedCardOrientation = this.connectionService.serialToOrientationMapping[playedCard.serial];
 
@@ -166,32 +147,6 @@ export class BridgeTableComponent implements AfterViewInit{
       this.changeDetector.detectChanges();
     });
 
-    // after undoing last played card (coming from server)- perform operations - remove that card from table and place it in player's hand
-    this.cardService.unPlayedCard$.subscribe((unPlayedCard: PlayedCard)=>{
-      if(!unPlayedCard.card) return;
-      this.setundoAble(false);
-      this.canCompleteRound = false;
-      let activationInfo: NextPlay = {
-        nextPlayer: unPlayedCard.playedBy, // pllayer one/two/three/four will play
-        nextCards: unPlayedCard.serial
-      }
-      this.activateCards(activationInfo);
-      let playedCardOrientation = this.connectionService.serialToOrientationMapping[unPlayedCard.serial];
-      switch(playedCardOrientation){
-        case 'left':
-          this.playerLeft.unplayCard(unPlayedCard.card);
-          break;
-        case 'right':
-          this.playerRight.unplayCard(unPlayedCard.card);
-          break;
-        case 'bottom':
-          this.playerBottom.unplayCard(unPlayedCard.card);
-          break;
-        case 'top':
-          this.playerTop.unplayCard(unPlayedCard.card);
-          break;
-      }
-    });
   }
 
   activateCards(nextPlay: NextPlay | null | undefined){
@@ -257,16 +212,6 @@ export class BridgeTableComponent implements AfterViewInit{
     this.changeDetector.detectChanges();
   }
 
-  showPointsModal(): void{
-    if(this.connectionService.activePlayerSerial!='one') return;
-    const dialogRef = this.dialog.open(PointsComponent, { disableClose: true });
-    this.changeDetector.detectChanges();
-
-    dialogRef.afterClosed().subscribe((result: any) => {
-      this.cardService.gameComplete({...result, setsTakenByTeam1: 0, setsTakenByTeam: 0});
-    });
-  }
-
   resetTable(){
     this.setBlankCardsToAll();
     this.deactivateAllCards();
@@ -296,7 +241,6 @@ export class BridgeTableComponent implements AfterViewInit{
   */
     deactivateAllCards(){
       this.activeCardsSerial ='';
-      this.setundoAble(false);
       this.changeDetector.detectChanges();
     }
   
@@ -307,13 +251,6 @@ export class BridgeTableComponent implements AfterViewInit{
       this.canShuffle = false;
       this.cardService.shuffleCard();
     }
-
-      /*
-    notify server after undo button is pressed
-  */
-  onUndoMove(){
-    this.cardService.unPlayCard();
-  }
 
   /*
     notify server after 4 cards are played and round complete button is pressed

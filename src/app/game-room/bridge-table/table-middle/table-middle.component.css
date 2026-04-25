@@ -64,11 +64,6 @@
         grid-row: 3/7;
     }
 
-    .undo {
-        grid-column: 1/5;
-        grid-row: 1/2;
-        margin-top: 1vh;
-    }
     .reshuffle {
         grid-column: 8/10;
         grid-row: 1;
