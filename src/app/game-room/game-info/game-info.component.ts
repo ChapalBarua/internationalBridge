@@ -10,6 +10,8 @@ import { CardService } from 'src/app/service/card.service';
 })
 export class GameInfoComponent implements AfterViewInit{
   private exitTriggered = false;
+  pointsPanelOpen = false;
+  roomPanelOpen = false;
 
   constructor(
     public webRtcService: WebrtcService,
@@ -34,6 +36,16 @@ export class GameInfoComponent implements AfterViewInit{
 
   triggerChanges(){
     this.changeDetector.detectChanges();
+  }
+
+  togglePointsPanel(): void {
+    this.pointsPanelOpen = !this.pointsPanelOpen;
+    this.triggerChanges();
+  }
+
+  toggleRoomPanel(): void {
+    this.roomPanelOpen = !this.roomPanelOpen;
+    this.triggerChanges();
   }
 
   async joinCall(): Promise<void> {
