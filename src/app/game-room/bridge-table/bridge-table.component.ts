@@ -126,7 +126,10 @@ export class BridgeTableComponent implements AfterViewInit{
     // after a card is played (coming from server)- perform operations
     this.cardService.playedCard$.subscribe((playedCard: PlayedCard)=>{
       if(!playedCard.card) return;
-      if(!playedCard.next) this.canCompleteRound = true;
+      if(!playedCard.next){
+        this.canCompleteRound = true;
+        this.deactivateAllCards();
+      }
       this.activateCards(playedCard?.next);
       let playedCardOrientation = this.connectionService.serialToOrientationMapping[playedCard.serial];
 
