@@ -3,7 +3,7 @@
     
     img {
         grid-area: image;
-        height: 12vh;
+        height: 12svh;
         width: 4vw;
     }
 }
@@ -11,7 +11,7 @@
 @media (max-width: 978px) and (orientation:landscape){
     .img {
         img {
-            height: 13vh;
+            height: 10svh;
         }
     }
 }
@@ -19,7 +19,7 @@
 @media screen and (orientation:portrait) {
     .img {
         img {
-            height: 7vh;
+            height: 7svh;
             width: 8vw;
         }
     }
@@ -28,7 +28,7 @@
 
 .img {
     .played-card {
-        height: 18vh;
+        height: 18svh;
         width: 10vw;
     }
 }
@@ -37,7 +37,7 @@
 @media screen and (orientation:portrait){
     .img {
         .played-card {
-            height: 8vh;
+            height: 8svh;
             width: 10vw;
         }
     }

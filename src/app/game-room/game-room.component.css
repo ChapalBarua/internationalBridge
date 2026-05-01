@@ -20,20 +20,20 @@
 @media screen and (orientation:portrait) {
     .game-room {
         grid-template-columns: 1fr;
-        grid-template-rows: minmax(0, 58dvh) minmax(0, 42dvh);
-        height: 100dvh;
+        grid-template-rows: minmax(0, 64svh) minmax(0, 36svh);
+        height: 100svh;
         .bridge-table  {
             grid-column: 1;
             grid-row: 1;
             width: 100vw;
-            height: 58dvh;
+            height: 64svh;
             min-height: 0;
         }
         .game-info {
             grid-column: 1;
             grid-row: 2;
             width: 100vw;
-            height: 42dvh;
+            height: 36svh;
             min-height: 0;
         }
     }

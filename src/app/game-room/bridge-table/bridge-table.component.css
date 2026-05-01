@@ -48,15 +48,15 @@
 @media screen and (orientation:portrait) {
     .container {
         width: 100vw;
-        height: 58dvh;
+        height: 64svh;
         .grid {
             width: 100vw;
-            height: 58dvh;
+            height: 64svh;
             .player-left {
-                height: 58dvh;
+                height: 64svh;
             }
             .player-right {
-                height: 58dvh;
+                height: 64svh;
             }
             .player-bottom {
                align-content: end;

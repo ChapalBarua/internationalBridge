@@ -3,7 +3,7 @@
     grid-template-rows: repeat(7, 1fr);
     grid-template-columns: 1fr 1fr;
     column-gap: 1vw;
-    row-gap: 1vh;
+    row-gap: 1svh;
     min-width: 9vw;
 }
 
@@ -12,8 +12,8 @@
     grid-template-columns: repeat(7, 1fr);
     grid-template-rows: 1fr 1fr;
     column-gap: 1vw;
-    row-gap: 1vh;
-    min-height: 25vh;
+    row-gap: 1svh;
+    min-height: 25svh;
 }
 
 @media screen and (orientation:portrait) {
@@ -22,7 +22,7 @@
     } 
 
     .player-container-horizontal{ 
-        min-height: 16vh;
+        min-height: 16svh;
     }
 
 }

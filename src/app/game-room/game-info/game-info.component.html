@@ -1,65 +1,68 @@
 <div class="points">
-    <div class="points-left-shell">
-        <button
-            class="panel-toggle-link points-toggle-button"
-            type="button"
-            [attr.aria-expanded]="pointsPanelOpen"
-            (click)="togglePointsPanel()">
-            <span class="points-toggle-label">Pts</span>
-        </button>
-
-        <div class="points-left" *ngIf="pointsPanelOpen">
-            <button class="points-close-button" type="button" (click)="togglePointsPanel()">x</button>
-            Current Call - {{cardService.currentCall}}<br>
-            Sets Taken by you - {{cardService.ownerTeamSets}}<br>
-            Sets Taken by opponent- {{cardService.opponentTeamSets}}<br>
-            Your points - {{cardService.ownerTeamPoints}}<br>
-            Opponent points - {{cardService.opponentTeamPoints}}
-        </div>
-    </div>
-    <div class="points-right">
-        <div class="room-shell">
+    <div class="top-toolbar">
+        <div class="points-left-shell">
             <button
-                class="panel-toggle-link room-toggle-link"
+                class="panel-toggle-link points-toggle-button"
                 type="button"
-                [attr.aria-expanded]="roomPanelOpen"
-                (click)="toggleRoomPanel()">
-                <span class="points-toggle-label">Info</span>
+                [attr.aria-expanded]="pointsPanelOpen"
+                (click)="togglePointsPanel()">
+                <span class="points-toggle-label">Pts</span>
             </button>
 
-            <div class="room-meta" *ngIf="roomPanelOpen">
-                <button class="points-close-button room-close-button" type="button" (click)="toggleRoomPanel()">x</button>
-                <div>Room No - {{ connectionService.roomId }}</div>
-                <div>Connected Users - {{ connectionService.serverUsers.connectedUsers }}</div>
-                <div>Active Users - {{ connectionService.serverUsers.activeUsers }}</div>
-                <div>Games: Team 1: {{ cardService.activeGamesByTeam1 }}, Team 2: {{ cardService.activeGamesByTeam2 }}</div>
+            <div class="points-left" *ngIf="pointsPanelOpen">
+                <button class="points-close-button" type="button" (click)="togglePointsPanel()">x</button>
+                Current Call - {{cardService.currentCall}}<br>
+                Sets Taken by you - {{cardService.ownerTeamSets}}<br>
+                Sets Taken by opponent- {{cardService.opponentTeamSets}}<br>
+                Your points - {{cardService.ownerTeamPoints}}<br>
+                Opponent points - {{cardService.opponentTeamPoints}}
+            </div>
+            <div class="room-shell">
+                <button
+                    class="panel-toggle-link room-toggle-link"
+                    type="button"
+                    [attr.aria-expanded]="roomPanelOpen"
+                    (click)="toggleRoomPanel()">
+                    <span class="points-toggle-label">Info</span>
+                </button>
+
+                <div class="room-meta" *ngIf="roomPanelOpen">
+                    <button class="points-close-button room-close-button" type="button" (click)="toggleRoomPanel()">x</button>
+                    <div>Room No - {{ connectionService.roomId }}</div>
+                    <div>Connected Users - {{ connectionService.serverUsers.connectedUsers }}</div>
+                    <div>Active Users - {{ connectionService.serverUsers.activeUsers }}</div>
+                    <div>Games: Team 1: {{ cardService.activeGamesByTeam1 }}, Team 2: {{ cardService.activeGamesByTeam2 }}</div>
+                </div>
             </div>
         </div>
-        <div class="room-actions">
-            <button
-                class="join-call-button"
-                type="button"
-                [disabled]="webRtcService.callJoined || webRtcService.callJoining"
-                (click)="joinCall()">
-                <span class="action-label-full">{{ webRtcService.callJoined ? 'Joined Call' : (webRtcService.callJoining ? 'Joining Call...' : 'Join Call') }}</span>
-                <span class="action-label-compact">{{ webRtcService.callJoined ? 'Joined' : (webRtcService.callJoining ? 'Joining' : 'Join Call') }}</span>
-            </button>
-            <button
-                class="drop-call-button"
-                type="button"
-                [disabled]="!webRtcService.callJoined || webRtcService.callJoining"
-                (click)="dropCall()">
-                <span class="action-label-full">Drop Call</span>
-                <span class="action-label-compact">Drop</span>
-            </button>
-            <button
-                class="exit-lobby-button"
-                type="button"
-                (click)="exitToLobby()"
-                (touchend)="onExitTouch($event)">
-                <span class="action-label-full">Lobby</span>
-                <span class="action-label-compact">Lobby</span>
-            </button>
+
+        <div class="points-right">
+            <div class="room-actions">
+                <button
+                    class="join-call-button"
+                    type="button"
+                    [disabled]="webRtcService.callJoined || webRtcService.callJoining"
+                    (click)="joinCall()">
+                    <span class="action-label-full">{{ webRtcService.callJoined ? 'Joined Call' : (webRtcService.callJoining ? 'Joining Call...' : 'Join Call') }}</span>
+                    <span class="action-label-compact">{{ webRtcService.callJoined ? 'Joined' : (webRtcService.callJoining ? 'Joining' : 'Join Call') }}</span>
+                </button>
+                <button
+                    class="drop-call-button"
+                    type="button"
+                    [disabled]="!webRtcService.callJoined || webRtcService.callJoining"
+                    (click)="dropCall()">
+                    <span class="action-label-full">Drop Call</span>
+                    <span class="action-label-compact">Drop</span>
+                </button>
+                <button
+                    class="exit-lobby-button"
+                    type="button"
+                    (click)="exitToLobby()"
+                    (touchend)="onExitTouch($event)">
+                    <span class="action-label-full">Lobby</span>
+                    <span class="action-label-compact">Lobby</span>
+                </button>
+            </div>
         </div>
     </div>
     <div class="video-1">
