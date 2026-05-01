@@ -112,11 +112,6 @@ export class CardService {
       this.canShuffle$.next(canShuffle);
     });
 
-    // server announces round_complete
-    this.socket.fromEvent('round_complete').subscribe(()=>{
-      this.roundComplete$.next(true);
-    });
-
     // update points based on server feedback
     this.socket.on('update_points', this.onUpdatePoints.bind(this));
   }
