@@ -3,6 +3,13 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+.toast-bonus {
+    background: linear-gradient(135deg, #ffcf33, #ff8f1f) !important;
+    color: #2c1600 !important;
+    font-weight: 700;
+    box-shadow: 0 10px 24px rgba(120, 62, 0, 0.28) !important;
+}
+
 .bridge-call-dialog-panel.cdk-overlay-pane {
     position: fixed !important;
     top: 50% !important;

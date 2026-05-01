@@ -19,6 +19,23 @@ export class NotificationService {
                     case NotificationType.success :
                         this.toastrService.success(message.message);
                         break;
+                    case NotificationType.score :
+                        this.toastrService.show(message.message, '', {
+                            timeOut: 10000,
+                            extendedTimeOut: 5000,
+                            closeButton: true,
+                            progressBar: true
+                        });
+                        break;
+                    case NotificationType.bonus :
+                        this.toastrService.show(message.message, '', {
+                            toastClass: 'ngx-toastr toast-bonus',
+                            timeOut: 10000,
+                            extendedTimeOut: 5000,
+                            closeButton: true,
+                            progressBar: true
+                        });
+                        break;
                     case NotificationType.error :
                         this.toastrService.error(message.message);
                         break;
@@ -49,5 +66,7 @@ export enum NotificationType {
     success = 0,
     warning = 1,
     error = 2,
-    info = 3
+    info = 3,
+    bonus = 4,
+    score = 5
 }

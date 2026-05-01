@@ -101,7 +101,11 @@ export class CardService {
     });
 
     this.socket.fromEvent<GameScored>('game_scored').subscribe(({ message }: GameScored)=>{
-      this.notificationService.sendMessage({message, type: NotificationType.success});
+      this.notificationService.sendMessage({message, type: NotificationType.score});
+    });
+
+    this.socket.fromEvent<string>('bonus_notification').subscribe((message: string)=>{
+      this.notificationService.sendMessage({message, type: NotificationType.bonus});
     });
 
     // can_shuffle

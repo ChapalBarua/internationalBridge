@@ -53,7 +53,9 @@ const config: SocketIoConfig = { url: environment.socketUrl, options: { autoConn
     MatDialogModule,
     SocketIoModule.forRoot(config),
     ToastrModule.forRoot({
-      positionClass :'toast-top-right'
+      positionClass :'toast-top-right',
+      closeButton: true,
+      progressBar: true
     }),
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: !isDevMode(),
