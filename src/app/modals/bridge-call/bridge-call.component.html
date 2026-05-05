@@ -1,12 +1,14 @@
 <h2 mat-dialog-title>Bid</h2>
 <mat-dialog-content>
-    <p>Highest bid: {{ highestBidLabel }}</p>
+    <p>Highest bid: <app-bid-label [label]="highestBidLabel"></app-bid-label></p>
 
     <form [formGroup]="selectCall">
         <mat-form-field>
             <mat-label>Your bid</mat-label>
             <mat-select formControlName="bidKey">
-                <mat-option *ngFor="let bidOption of bidOptions" [value]="bidOption.label">{{ bidOption.label }}</mat-option>
+                <mat-option *ngFor="let bidOption of bidOptions" [value]="bidOption.label">
+                    <app-bid-label [label]="bidOption.label"></app-bid-label>
+                </mat-option>
             </mat-select>
         </mat-form-field>
     </form>

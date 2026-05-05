@@ -11,7 +11,7 @@
 
             <div class="points-left" *ngIf="pointsPanelOpen">
                 <button class="points-close-button" type="button" (click)="togglePointsPanel()">x</button>
-                Current Call - {{cardService.currentCall}}<br>
+                Current Call - <app-bid-label [label]="cardService.currentCall"></app-bid-label><br>
                 Sets Taken by you - {{cardService.ownerTeamSets}}<br>
                 Sets Taken by opponent- {{cardService.opponentTeamSets}}<br>
                 Your points - {{cardService.ownerTeamPoints}}<br>

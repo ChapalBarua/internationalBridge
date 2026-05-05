@@ -106,10 +106,10 @@ export class BridgeCallComponent {
 
   private formatBid(call: number, color: BidColor){
     const labels = {
-      clubs: 'C',
-      diamonds: 'D',
-      hearts: 'H',
-      spades: 'S',
+      clubs: '♣',
+      diamonds: '♦',
+      hearts: '♥',
+      spades: '♠',
       nt: 'NT'
     };
 

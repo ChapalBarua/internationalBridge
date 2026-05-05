@@ -24,6 +24,7 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { BidLabelComponent } from './bid-label/bid-label.component';
 
 const config: SocketIoConfig = { url: environment.socketUrl, options: { autoConnect: true } };
 
@@ -38,7 +39,8 @@ const config: SocketIoConfig = { url: environment.socketUrl, options: { autoConn
     TableMiddleComponent,
     GameRoomComponent,
     GameInfoComponent,
-    LoginComponent
+    LoginComponent,
+    BidLabelComponent
   ],
   imports: [
     BrowserModule,
