@@ -1,4 +1,10 @@
 
 <div class="img">
-    <img [src]="imageUrl" (click) = "onClick()" [ngClass]="{'played-card': playedCard }">
+    <img
+        [src]="imageUrl"
+        (click)="onClick()"
+        [ngClass]="{
+            'played-card': playedCard,
+            'face-down-card': !faceUp
+        }">
 </div>
