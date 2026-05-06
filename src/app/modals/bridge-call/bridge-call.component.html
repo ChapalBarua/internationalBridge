@@ -3,8 +3,8 @@
     <p>Highest bid: <app-bid-label [label]="highestBidLabel"></app-bid-label></p>
 
     <form [formGroup]="selectCall">
-        <mat-form-field>
-            <mat-label>Your bid</mat-label>
+        <label class="bid-field-label" for="bidKey">Your bid</label>
+        <mat-form-field appearance="outline">
             <mat-select formControlName="bidKey">
                 <mat-option *ngFor="let bidOption of bidOptions" [value]="bidOption.label">
                     <app-bid-label [label]="bidOption.label"></app-bid-label>

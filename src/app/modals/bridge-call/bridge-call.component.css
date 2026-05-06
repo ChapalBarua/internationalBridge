@@ -14,6 +14,13 @@ form {
     gap: 0.05rem;
 }
 
+.bid-field-label {
+    color: rgba(0, 0, 0, 0.72);
+    font-size: 0.68rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
 mat-form-field {
     width: 100%;
 }
