@@ -201,6 +201,10 @@ export class BridgeTableComponent implements AfterViewInit{
       four: ''
     };
 
+    this.nextPlayer = biddingState?.nextBidder
+      ? this.connectionService.serialToOrientationMapping[biddingState.nextBidder]
+      : '';
+
     const isMyTurnToBid = biddingState?.nextBidder === this.connectionService.activePlayerSerial;
 
     if(!isMyTurnToBid){
@@ -218,6 +222,7 @@ export class BridgeTableComponent implements AfterViewInit{
   resetTable(){
     this.setBlankCardsToAll();
     this.deactivateAllCards();
+    this.nextPlayer = '';
   }
 
   updateUserNames(){

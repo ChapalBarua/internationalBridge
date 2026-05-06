@@ -1,0 +1,93 @@
+.rulebook-shell {
+    color: #14312b;
+}
+
+.rulebook-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.25rem 1.25rem 0;
+}
+
+.rulebook-kicker {
+    margin-bottom: 0.45rem;
+    color: #9a6c14;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.rulebook-header h2 {
+    margin: 0;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 2rem;
+    letter-spacing: -0.04em;
+}
+
+.rulebook-content {
+    display: grid;
+    gap: 1rem;
+    padding: 0 1.25rem 1rem;
+}
+
+.rulebook-summary {
+    margin: 0;
+    padding: 0.9rem 1rem;
+    border: 1px solid rgba(19, 49, 43, 0.12);
+    border-radius: 1rem;
+    background: linear-gradient(135deg, rgba(215, 165, 66, 0.12), rgba(13, 59, 50, 0.06));
+    color: rgba(20, 49, 43, 0.82);
+    line-height: 1.5;
+}
+
+.rulebook-section {
+    padding: 1rem;
+    border: 1px solid rgba(19, 49, 43, 0.1);
+    border-radius: 1rem;
+    background: #fffdf8;
+}
+
+.rulebook-section h3 {
+    margin: 0 0 0.65rem;
+    color: #0d3b32;
+    font-size: 1.05rem;
+}
+
+.rulebook-section ul {
+    margin: 0;
+    padding-left: 1.1rem;
+    color: rgba(20, 49, 43, 0.84);
+    line-height: 1.55;
+}
+
+.rulebook-section li + li {
+    margin-top: 0.45rem;
+}
+
+mat-dialog-actions {
+    padding: 0 1.25rem 1.25rem;
+}
+
+@media (max-width: 600px) {
+    .rulebook-header {
+        padding: 1rem 1rem 0;
+    }
+
+    .rulebook-header h2 {
+        font-size: 1.7rem;
+    }
+
+    .rulebook-content {
+        padding: 0 1rem 0.85rem;
+    }
+
+    .rulebook-section {
+        padding: 0.9rem;
+    }
+
+    mat-dialog-actions {
+        padding: 0 1rem 1rem;
+    }
+}

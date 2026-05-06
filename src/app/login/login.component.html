@@ -4,6 +4,12 @@
         <h1>Deal in, wherever your table is.</h1>
         <p>Join a live bridge room, invite friends, and keep the table moving with built-in video.</p>
 
+        <div class="hero-actions">
+            <button mat-stroked-button class="rules-action" type="button" (click)="openRulebook()">
+                How to play
+            </button>
+        </div>
+
         <div class="server-panel" [class.offline]="!connectionService.connected">
             <span class="status-dot"></span>
             <span>{{ connectionService.connected ? 'Server online' : 'Server offline' }}</span>

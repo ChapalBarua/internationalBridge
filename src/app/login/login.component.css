@@ -82,6 +82,24 @@
     line-height: 1.55;
 }
 
+.hero-actions {
+    margin-bottom: 1.25rem;
+}
+
+.rules-action {
+    min-height: 2.65rem;
+    padding-inline: 1.1rem;
+    border-radius: 999px;
+    border-color: rgba(255, 248, 232, 0.28) !important;
+    color: #fff8e8 !important;
+    background: rgba(255, 248, 232, 0.08) !important;
+    font-weight: 800;
+}
+
+.rules-action:hover {
+    background: rgba(255, 248, 232, 0.14) !important;
+}
+
 .server-panel {
     width: fit-content;
     display: flex;
@@ -225,7 +243,8 @@
     }
 
     .hero-kicker,
-    .server-panel {
+    .server-panel,
+    .hero-actions {
         margin-left: auto;
         margin-right: auto;
     }

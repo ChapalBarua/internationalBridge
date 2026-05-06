@@ -1,0 +1,28 @@
+<div class="rulebook-shell">
+    <div class="rulebook-header">
+        <div>
+            <div class="rulebook-kicker">International Bridge</div>
+            <h2 mat-dialog-title>How to Play</h2>
+        </div>
+        <button mat-icon-button type="button" mat-dialog-close aria-label="Close rulebook">
+            x
+        </button>
+    </div>
+
+    <mat-dialog-content class="rulebook-content">
+        <p class="rulebook-summary">
+            Learn the flow of the game, how bidding works, how tricks are won, and how points are scored here.
+        </p>
+
+        <section *ngFor="let section of sections" class="rulebook-section">
+            <h3>{{ section.title }}</h3>
+            <ul>
+                <li *ngFor="let item of section.items">{{ item }}</li>
+            </ul>
+        </section>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+        <button mat-flat-button color="primary" mat-dialog-close>Close</button>
+    </mat-dialog-actions>
+</div>

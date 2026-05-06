@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { ConnectionService } from '../service/connection.service';
+import { RulebookComponent } from '../modals/rulebook/rulebook.component';
 import { ActiveRoomSummary } from '../types/types';
 
 @Component({
@@ -12,7 +14,11 @@ export class LoginComponent {
   public loginForm!: FormGroup;
   activeRooms: ActiveRoomSummary[] = [];
 
-  constructor(public connectionService: ConnectionService, private fb: FormBuilder) {}
+  constructor(
+    public connectionService: ConnectionService,
+    private fb: FormBuilder,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit() {
     this.loginForm = this.fb.group({
@@ -37,6 +43,15 @@ export class LoginComponent {
 
   public createRoom() {
     this.connectionService.createRoom(this.loginForm.get('name')?.value);
+  }
+
+  openRulebook() {
+    this.dialog.open(RulebookComponent, {
+      width: '52rem',
+      maxWidth: '92vw',
+      maxHeight: '88svh',
+      panelClass: 'rulebook-dialog-panel'
+    });
   }
 }
 
