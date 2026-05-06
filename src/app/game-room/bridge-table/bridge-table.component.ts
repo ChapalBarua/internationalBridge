@@ -177,8 +177,8 @@ export class BridgeTableComponent implements AfterViewInit{
         highestBid: biddingState.highestBid
       },
       panelClass: 'bridge-call-dialog-panel',
-      width: 'min(15rem, 78vw)',
-      maxWidth: '78vw'
+      width: 'min(17rem, 86vw)',
+      maxWidth: '86vw'
     });
     this.biddingDialogRef = dialogRef;
 

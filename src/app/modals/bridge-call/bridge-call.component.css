@@ -1,12 +1,12 @@
 h2[mat-dialog-title] {
     margin: 0;
-    padding: 0.28rem 0.45rem 0;
+    padding: 0.28rem 0.35rem 0;
     font-size: 0.72rem;
     line-height: 1.2;
 }
 
 mat-dialog-content {
-    padding: 0 0.45rem;
+    padding: 0 0.35rem;
 }
 
 form {
@@ -27,7 +27,7 @@ mat-form-field {
 
 mat-dialog-actions {
     min-height: auto;
-    padding: 0 0.45rem 0.25rem;
+    padding: 0 0.35rem 0.25rem;
 }
 
 @media screen and (orientation:portrait) {
@@ -37,7 +37,7 @@ mat-dialog-actions {
     }
 
     mat-dialog-content {
-        padding: 0 0.4rem;
+        padding: 0 0.25rem;
     }
 
     form {
@@ -45,6 +45,6 @@ mat-dialog-actions {
     }
 
     mat-dialog-actions {
-        padding: 0 0.4rem 0.2rem;
+        padding: 0 0.25rem 0.2rem;
     }
 }
