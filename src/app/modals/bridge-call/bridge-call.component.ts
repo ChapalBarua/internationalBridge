@@ -14,6 +14,8 @@ type BidOption = {
 type BridgeCallDialogData = {
   players: SerialNameMapping;
   highestBid: CallInfo | null;
+  canDouble: boolean;
+  isDoubled: boolean;
 };
 
 @Component({
@@ -25,6 +27,7 @@ export class BridgeCallComponent {
   readonly selectCall: FormGroup;
   readonly bidOptions: BidOption[];
   readonly highestBidLabel: string;
+  readonly canDouble: boolean;
 
   constructor(
     fb: FormBuilder,
@@ -32,7 +35,8 @@ export class BridgeCallComponent {
     @Inject(MAT_DIALOG_DATA) public data: BridgeCallDialogData
   ) {
     this.bidOptions = this.getAllBidOptions().filter(option => this.isHigherBid(option.value, data.highestBid));
-    this.highestBidLabel = data.highestBid ? this.formatBid(data.highestBid.call, data.highestBid.color) : 'No bid yet';
+    this.highestBidLabel = data.highestBid ? this.formatBid(data.highestBid.call, data.highestBid.color, data.isDoubled) : 'No bid yet';
+    this.canDouble = data.canDouble;
     this.selectCall = fb.group({
       bidKey: this.bidOptions[0]?.label ?? ''
     });
@@ -57,6 +61,19 @@ export class BridgeCallComponent {
       call: selectedBid.value.call,
       color: selectedBid.value.color,
       personCalled: 'one'
+    });
+  }
+
+  onDouble(){
+    if(!this.data.highestBid || !this.canDouble){
+      return;
+    }
+
+    this.dialogRef.close({
+      call: this.data.highestBid.call,
+      color: this.data.highestBid.color,
+      personCalled: 'one',
+      double: true
     });
   }
 
@@ -104,7 +121,7 @@ export class BridgeCallComponent {
     }[color];
   }
 
-  private formatBid(call: number, color: BidColor){
+  private formatBid(call: number, color: BidColor, isDoubled = false){
     const labels = {
       clubs: '♣',
       diamonds: '♦',
@@ -113,6 +130,6 @@ export class BridgeCallComponent {
       nt: 'NT'
     };
 
-    return `${call}${labels[color]}`;
+    return `${call}${labels[color]}${isDoubled ? ' X' : ''}`;
   }
 }

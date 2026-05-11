@@ -100,8 +100,11 @@ export class CardService {
       this.notificationService.sendMessage({message, type: NotificationType.warning});
     });
 
-    this.socket.fromEvent<GameScored>('game_scored').subscribe(({ message }: GameScored)=>{
+    this.socket.fromEvent<GameScored>('game_scored').subscribe(({ message, gameCompleteAnnouncement }: GameScored)=>{
       this.notificationService.sendMessage({message, type: NotificationType.score});
+      if(gameCompleteAnnouncement){
+        this.notificationService.sendMessage({message: gameCompleteAnnouncement, type: NotificationType.score});
+      }
     });
 
     this.socket.fromEvent<string>('bonus_notification').subscribe((message: string)=>{

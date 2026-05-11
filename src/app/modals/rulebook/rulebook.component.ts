@@ -28,6 +28,8 @@ export class RulebookComponent {
         'A bid names a level from 1 to 7 and a denomination: ♣, ♦, ♥, ♠, or NT.',
         'At the same level, the rank order is ♣, then ♦, then ♥, then ♠, then NT.',
         'A new bid must be higher than the current highest bid, either by level or by denomination at the same level.',
+        'If the opponents currently hold the live contract, a player may call Double on their turn.',
+        'Double applies to the current live contract only. If a higher bid is made later, that Double is cancelled.',
         'If nobody has bid yet, four straight passes cause a redeal and the last passer\'s team loses 50 points.',
         'Once there is a valid highest bid, three straight passes end the auction.'
       ]
@@ -68,7 +70,11 @@ export class RulebookComponent {
       items: [
         'This app uses its own running-score system inspired by bridge, not standard duplicate scoring.',
         'If the contract fails, the declaring side loses 50 points for each undertrick.',
+        'If the contract was doubled and it fails, the declaring side loses 100 points for each undertrick instead.',
         'If the contract makes, the declaring side scores for total tricks won: ♣ = 6 per trick above book, ♦ = 7, ♥ = 8, ♠ = 9, NT = 10.',
+        'If the contract was doubled and it makes, those contract game points are doubled.',
+        'If the contract was doubled and the declaring side still makes or beats the contract, that side also gets a False Call bonus of 50 points.',
+        'If the contract was doubled and the declaring side wins extra tricks beyond the target, it gets an additional 50 points for each extra trick.',
         'Only the declaring side receives contract points or contract penalties.',
         'The scoreboard is cumulative across hands.'
       ]

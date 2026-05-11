@@ -82,7 +82,8 @@ export interface CallInfo {
   color: BidColor,
   call: number,
   personCalled: Serial,
-  pass?: boolean
+  pass?: boolean,
+  double?: boolean
 }
 
 export interface BiddingState {
@@ -90,6 +91,8 @@ export interface BiddingState {
   highestBid: CallInfo | null,
   consecutivePasses: number,
   canPass: boolean,
+  canDouble: boolean,
+  isDoubled: boolean,
   playerBids: Record<Serial, string>
 }
 
@@ -185,7 +188,8 @@ export interface GameScored {
     team1: number,
     team2: number
   },
-  message: string
+  message: string,
+  gameCompleteAnnouncement: string
 }
 
 

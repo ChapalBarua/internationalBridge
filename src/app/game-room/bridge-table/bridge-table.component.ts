@@ -174,7 +174,9 @@ export class BridgeTableComponent implements AfterViewInit{
       disableClose: true,
       data: {
         players: this.connectionService.players,
-        highestBid: biddingState.highestBid
+        highestBid: biddingState.highestBid,
+        canDouble: biddingState.canDouble,
+        isDoubled: biddingState.isDoubled
       },
       panelClass: 'bridge-call-dialog-panel',
       width: 'min(18rem, 94vw)',
