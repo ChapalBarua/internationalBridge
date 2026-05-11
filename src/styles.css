@@ -67,17 +67,17 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 @media screen and (orientation:portrait) {
     .bridge-call-dialog-panel.cdk-overlay-pane {
-        top: 29dvh !important;
+        top: 75dvh !important;
         right: auto !important;
         bottom: auto !important;
         left: 50% !important;
-        width: min(18rem, 94vw) !important;
-        max-width: 94vw !important;
+        width: min(13rem, 61vw) !important;
+        max-width: 61vw !important;
         transform: translate(-50%, -50%);
     }
 
     .bridge-call-dialog-panel .mat-mdc-dialog-container .mdc-dialog__surface {
-        max-height: 40svh;
+        max-height: 36svh;
     }
 
     .bridge-call-dialog-panel .mat-mdc-form-field {
