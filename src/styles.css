@@ -71,13 +71,13 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
         right: auto !important;
         bottom: auto !important;
         left: 50% !important;
-        width: min(9rem, 38vw) !important;
-        max-width: 38vw !important;
+        width: min(18rem, 94vw) !important;
+        max-width: 94vw !important;
         transform: translate(-50%, -50%);
     }
 
     .bridge-call-dialog-panel .mat-mdc-dialog-container .mdc-dialog__surface {
-        max-height: 24svh;
+        max-height: 40svh;
     }
 
     .bridge-call-dialog-panel .mat-mdc-form-field {
@@ -94,7 +94,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     .bridge-call-dialog-panel .mat-mdc-form-field,
     .bridge-call-dialog-panel .mat-mdc-select-value,
     .bridge-call-dialog-panel .mat-mdc-floating-label {
-        font-size: 0.58rem;
+        font-size: 0.68rem;
     }
 }
 
