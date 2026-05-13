@@ -23,6 +23,7 @@ import { GameInfoComponent } from './game-room/game-info/game-info.component';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { Capacitor } from '@capacitor/core';
 import { environment } from '../environments/environment';
 import { BidLabelComponent } from './bid-label/bid-label.component';
 import { RulebookComponent } from './modals/rulebook/rulebook.component';
@@ -62,7 +63,7 @@ const config: SocketIoConfig = { url: environment.socketUrl, options: { autoConn
       progressBar: true
     }),
     ServiceWorkerModule.register('ngsw-worker.js', {
-      enabled: !isDevMode(),
+      enabled: !isDevMode() && !Capacitor.isNativePlatform(),
       // Register the ServiceWorker as soon as the application is stable
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
