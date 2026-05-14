@@ -1,0 +1,71 @@
+.legal-shell {
+    --felt: #0d3b32;
+    --felt-deep: #071d1a;
+    --cream: #fff8e8;
+    --gold: #d7a542;
+    min-height: 100dvh;
+    padding: clamp(1rem, 4vw, 3rem);
+    display: grid;
+    place-items: center;
+    background:
+        radial-gradient(circle at 12% 16%, rgba(215, 165, 66, 0.24), transparent 20rem),
+        radial-gradient(circle at 88% 80%, rgba(92, 145, 124, 0.24), transparent 18rem),
+        linear-gradient(135deg, var(--felt-deep), var(--felt) 58%, #09251f);
+}
+
+.legal-card {
+    width: min(100%, 48rem);
+    padding: clamp(1.2rem, 4vw, 2rem);
+    border: 1px solid rgba(255, 248, 232, 0.16);
+    border-radius: 1.5rem;
+    background: rgba(255, 248, 232, 0.96);
+    color: #14312b;
+    box-shadow: 0 1.5rem 3rem rgba(0, 0, 0, 0.24);
+}
+
+.legal-kicker {
+    margin: 0 0 0.4rem;
+    color: #9a6c14;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.legal-card h1 {
+    margin: 0;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    letter-spacing: -0.04em;
+}
+
+.legal-lead {
+    margin: 1rem 0 1.25rem;
+    color: rgba(20, 49, 43, 0.78);
+    line-height: 1.6;
+}
+
+.legal-section + .legal-section {
+    margin-top: 1.1rem;
+}
+
+.legal-section h2 {
+    margin: 0 0 0.45rem;
+    color: #0d3b32;
+    font-size: 1rem;
+}
+
+.legal-section p,
+.legal-section li {
+    line-height: 1.6;
+}
+
+.legal-section ul {
+    margin: 0;
+    padding-left: 1.2rem;
+}
+
+.legal-section a {
+    color: #0d3b32;
+    font-weight: 700;
+}
