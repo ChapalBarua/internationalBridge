@@ -5,7 +5,8 @@ const config: CapacitorConfig = {
   appName: 'international-bridge',
   webDir: 'dist/internationalBridge/browser',
   ios: {
-    zoomEnabled: true
+    zoomEnabled: true,
+    webContentsDebuggingEnabled: true
   }
 };
 

@@ -42,7 +42,7 @@
                             {{ room.roomId }} · {{ room.usersOnTable }}/4 players
                         </mat-option>
                     </mat-select>
-                    <mat-hint *ngIf="activeRooms.length === 0">No active rooms right now. Create a new room below.</mat-hint>
+                    <mat-hint *ngIf="activeRooms.length === 0">No active rooms right now. Create a new room.</mat-hint>
                 </mat-form-field>
 
                 <div class="active-room-preview" *ngIf="loginForm.get('roomId')?.value as selectedRoomId">

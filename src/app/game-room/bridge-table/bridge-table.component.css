@@ -1,7 +1,18 @@
+:host {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+}
+
 .container {
-    width: 59vw;
-    height: 100dvh;
+    width: 100%;
+    height: 100%;
     .grid {
+        width: 100%;
+        height: 100%;
         display: grid;
         grid-template-columns: 1fr 7fr 1fr;
         background-color: aliceblue;
@@ -10,14 +21,14 @@
             text-align: center;
         }
         .player-left {
-            height: 100dvh;
+            height: 100%;
             grid-column: 1/2;
             grid-row: 1/9;
             background-color: #8c8cd1;
         }
 
         .player-right {
-            height: 100dvh;
+            height: 100%;
             grid-column: 8/9;
             grid-row: 1/9;
             background-color: #8c8cd1;
@@ -47,16 +58,16 @@
 
 @media screen and (orientation:portrait) {
     .container {
-        width: 100vw;
-        height: 64svh;
+        width: 100%;
+        height: 100%;
         .grid {
-            width: 100vw;
-            height: 64svh;
+            width: 100%;
+            height: 100%;
             .player-left {
-                height: 64svh;
+                height: 100%;
             }
             .player-right {
-                height: 64svh;
+                height: 100%;
             }
             .player-bottom {
                align-content: end;

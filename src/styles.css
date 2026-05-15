@@ -1,7 +1,29 @@
 /* You can add global styles to this file, and also import other style files */
 
+/* ── iOS Safe Area ─────────────────────────────────────────────────────────
+   viewport-fit=cover lets the app go edge-to-edge.
+   These env() variables push content back inside the safe zone so nothing
+   is hidden under the status bar, Dynamic Island, or home indicator.
+   ──────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --safe-top:    env(safe-area-inset-top,    0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left:   env(safe-area-inset-left,   0px);
+  --safe-right:  env(safe-area-inset-right,  0px);
+}
+
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  padding-top: var(--safe-top);
+  padding-bottom: var(--safe-bottom);
+  padding-left: var(--safe-left);
+  padding-right: var(--safe-right);
+  box-sizing: border-box;
+}
+
 
 .toast-bonus {
     background: linear-gradient(135deg, #ffcf33, #ff8f1f) !important;

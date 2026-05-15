@@ -18,11 +18,20 @@
 
 @media screen and (orientation:portrait) {
     .player-container-vertical {
-        min-width: 17vw;
+        min-width: 15.5vw;
     } 
 
     .player-container-horizontal{ 
-        min-height: 16svh;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        grid-template-rows: repeat(2, auto);
+        min-height: 0;
+        column-gap: 0.8vw;
+        row-gap: 0.45svh;
+        align-content: end;
+    }
+
+    .player-container-horizontal .card {
+        min-width: 0;
     }
 
 }

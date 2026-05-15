@@ -26,9 +26,22 @@
 @media screen and (orientation:portrait) {
     .img {
         img {
-            height: 7svh;
-            width: 8vw;
+            height: 6.4svh;
+            width: 7.2vw;
         }
+    }
+
+    .img.top,
+    .img.bottom {
+        width: 100%;
+    }
+
+    .img.top img:not(.played-card),
+    .img.bottom img:not(.played-card) {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 5 / 7;
+        display: block;
     }
 }
 
@@ -44,8 +57,8 @@
 @media screen and (orientation:portrait){
     .img {
         .played-card {
-            height: 8svh;
-            width: 10vw;
+            height: 7.2svh;
+            width: 8.8vw;
         }
     }
 }
