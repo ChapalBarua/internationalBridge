@@ -43,7 +43,6 @@ export class CardService {
     this.socket.fromEvent<Card[]>('distribute_cards').subscribe((cards: Card[])=>{
       this.clearTable();
       this.currentCall = 'No bid yet';
-      this.biddingState$.next(null);
       this.shuffle$.next(cards);
     });
 
