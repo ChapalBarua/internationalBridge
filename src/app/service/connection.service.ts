@@ -1,10 +1,11 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { NotificationService, NotificationType } from './notification.service';
 import { ActiveRoomSummary, OrientationSerialMapping, RoomJoin, Serial, SerialNameMapping, UserTracker } from '../types/types';
 import { BehaviorSubject, Subject } from 'rxjs';
 import * as _ from 'lodash';
 import { Router } from '@angular/router';
+import { CardService } from './card.service';
 
 @Injectable({
   providedIn: 'root'
@@ -87,7 +88,7 @@ export class ConnectionService {
   activeRooms$: BehaviorSubject<ActiveRoomSummary[]> = new BehaviorSubject<ActiveRoomSummary[]>([]);
 
 
-  constructor(private socket: Socket, private notificationService: NotificationService, private router: Router) {
+  constructor(private socket: Socket, private notificationService: NotificationService, private router: Router, private injector: Injector) {
      // when the owner is connected to the server
      this.socket.on("connect", () => {
       this.notificationService.sendMessage({message: `Connected. Welcome to the Card Game Website` , type: NotificationType.info});
@@ -210,6 +211,7 @@ export class ConnectionService {
    */
   joinRoom(roomId: string, userName: string){
     if(this.roomId) return;
+    this.getCardService().resetState();
     this.socket.emit('join', {room: roomId, peerUUID: this.localPeerId, userName: userName});
   }
 
@@ -228,6 +230,7 @@ export class ConnectionService {
       this.socket.emit('leave_room');
     }
 
+    this.getCardService().resetState();
     this.resetRoomState();
     this.requestActiveRooms();
     this.notificationService.sendMessage({message: `Returned to lobby` , type: NotificationType.info});
@@ -244,6 +247,10 @@ export class ConnectionService {
   private generateRoomId(): string {
     const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
     return Array.from({ length: 6 }, () => alphabet[Math.floor(Math.random() * alphabet.length)]).join('');
+  }
+
+  private getCardService(): CardService {
+    return this.injector.get(CardService);
   }
 
   private resetRoomState() {
