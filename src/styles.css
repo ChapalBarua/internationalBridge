@@ -24,6 +24,11 @@ body {
   box-sizing: border-box;
 }
 
+.toast-top-right {
+    top: calc(var(--safe-top) + 0.65rem) !important;
+    right: calc(var(--safe-right) + 0.65rem) !important;
+}
+
 
 .toast-bonus {
     background: linear-gradient(135deg, #ffcf33, #ff8f1f) !important;
