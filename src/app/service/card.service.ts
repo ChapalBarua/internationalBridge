@@ -43,7 +43,6 @@ export class CardService {
     this.socket.fromEvent<Card[]>('distribute_cards').subscribe((cards: Card[])=>{
       this.clearTable();
       this.currentCall = 'No bid yet';
-      this.biddingState$.next(null);
       this.shuffle$.next(cards);
     });
 
@@ -199,6 +198,36 @@ export class CardService {
   clearTable(){
     this.cardsOnTable = {};
     this.connectionService.middleTableChanges$.next(true);
+  }
+
+  resetState() {
+    this.cardsOnTable = {};
+
+    this.ownerTeamPoints = 0;
+    this.opponentTeamPoints = 0;
+    this.ownerTeamSets = 0;
+    this.opponentTeamSets = 0;
+    this.currentCall = '';
+    this.activeGamesByTeam1 = 0;
+    this.activeGamesByTeam2 = 0;
+
+    this.canShuffle$.next(false);
+    this.shuffle$.next([]);
+    this.showCards$.next({
+      cards: [],
+      serial: 'one'
+    });
+    this.pendingPlayValidation$.next(false);
+    this.playedCard$.next({
+      serial: 'one',
+      card: null,
+      playedBy: 'one'
+    });
+    this.nextPlayer$.next(null);
+    this.biddingState$.next(null);
+
+    this.connectionService.middleTableChanges$.next(true);
+    this.gameInfoUpdate$.next(true);
   }
 
 }
