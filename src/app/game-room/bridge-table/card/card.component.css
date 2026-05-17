@@ -18,7 +18,8 @@
 @media (max-width: 978px) and (orientation:landscape){
     .img {
         img {
-            height: 13svh;
+            height: 10.5svh;
+            width: auto;
         }
     }
 }
