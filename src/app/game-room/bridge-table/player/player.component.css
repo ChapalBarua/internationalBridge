@@ -13,6 +13,8 @@
     column-gap: 1vw;
     row-gap: 1svh;
     min-width: 9vw;
+    height: 100%;
+    background-color: #8c8cd1;
 }
 
 .player-container-horizontal{
@@ -23,6 +25,7 @@
     row-gap: 1svh;
     min-height: 25svh;
     align-content: end;
+    background-color: #bad49ac9;
 }
 
 @media (max-width: 978px) and (orientation:landscape) {
