@@ -23,16 +23,23 @@
     grid-template-rows: 1fr 1fr;
     column-gap: 1vw;
     row-gap: 1svh;
+    height: 100%;
     min-height: 25svh;
-    align-content: end;
     background-color: #bad49ac9;
+}
+
+.player-container-top {
+    align-content: start;
+}
+
+.player-container-bottom {
+    align-content: end;
 }
 
 @media (max-width: 978px) and (orientation:landscape) {
     .player-container-horizontal {
         min-height: 0;
         row-gap: 0.45svh;
-        align-content: end;
     }
 }
 
@@ -44,10 +51,10 @@
     .player-container-horizontal{ 
         grid-template-columns: repeat(7, minmax(0, 1fr));
         grid-template-rows: repeat(2, auto);
+        height: 100%;
         min-height: 0;
         column-gap: 0.8vw;
         row-gap: 0.45svh;
-        align-content: end;
     }
 
     .player-container-horizontal .card {
