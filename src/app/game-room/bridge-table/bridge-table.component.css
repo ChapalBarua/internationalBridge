@@ -35,12 +35,23 @@
         .player-top {
             grid-column: 2/8;
             grid-row: 1/2;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
         }
         .player-bottom {
             grid-column: 2/8;
             grid-row: 8/9;
-            align-content: end;
-            
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .player-top app-player,
+        .player-bottom app-player {
+            width: 100%;
+            height: auto;
+            flex: 0 0 auto;
         }
 
         .table-middle {
@@ -66,7 +77,7 @@
                 height: 100%;
             }
             .player-bottom {
-               align-content: end;
+               justify-content: end;
             }
         }
     }
