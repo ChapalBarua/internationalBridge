@@ -6,6 +6,12 @@
         
         <div class="player-top">
             <app-player #playerTop  [orientation]="'top'" [serial]="playerTopSerial" [active]="activeCardsSerial===playerTopSerial"></app-player>
+            <div class="seat-name top-seat-name" [ngClass]="{'active-card': nextPlayer === 'top'}">
+                {{ playerTopName }}
+                <span *ngIf="biddingLabels[playerTopSerial] as bid" class="seat-bid">
+                    <app-bid-label [label]="bid"></app-bid-label>
+                </span>
+            </div>
         </div>
         
         <div class="player-right">
@@ -15,6 +21,12 @@
         <app-table-middle [canShuffle]="canShuffle" [nextPlayer]="nextPlayer" [playerBids]="biddingLabels" class="table-middle"/>
         
         <div class="player-bottom">
+            <div class="seat-name bottom-seat-name" [ngClass]="{'active-card': nextPlayer === 'bottom'}">
+                {{ playerBottomName }}
+                <span *ngIf="biddingLabels[playerBottomSerial] as bid" class="seat-bid">
+                    <app-bid-label [label]="bid"></app-bid-label>
+                </span>
+            </div>
             <app-player #playerBottom  [orientation]="'bottom'" [serial]="playerBottomSerial" [active]="activeCardsSerial===playerBottomSerial"></app-player>
         </div>
     </div>

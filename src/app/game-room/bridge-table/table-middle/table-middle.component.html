@@ -1,18 +1,10 @@
 <div class="table-container">
-    <div class="top-player-name" [ngClass]="{'active-card': nextPlayer === 'top'}">
-        {{connectionService.playerTopName}}
-        <span *ngIf="playerBids[connectionService.orientationToSerialMapping['top']] as bid" class="player-bid"><app-bid-label [label]="bid"></app-bid-label></span>
-    </div>
     <ng-container *ngIf="cardService.cardsOnTable['top']?.card as card">
         <div class="top-played-card" >
             <app-card [card]="card" [faceUp]="true" [playedCard]="true"> </app-card>
         </div>
     </ng-container>
     
-    <div class="bottom-player-name" [ngClass]="{'active-card': nextPlayer === 'bottom'}">
-        {{connectionService.playerBottomName}}
-        <span *ngIf="playerBids[connectionService.orientationToSerialMapping['bottom']] as bid" class="player-bid"><app-bid-label [label]="bid"></app-bid-label></span>
-    </div>
     <ng-container *ngIf="cardService.cardsOnTable['bottom']?.card as card">
         <div class="bottom-played-card" >
             <app-card [card]="card" [faceUp]="true" [playedCard]="true"> </app-card>
