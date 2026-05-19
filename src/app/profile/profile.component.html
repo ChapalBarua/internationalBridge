@@ -1,17 +1,17 @@
 <div class="cursor" id="cb-cursor"></div>
 <div class="cursor-ring" id="cb-cursor-ring"></div>
 
-<main class="profile-page">
+<main class="profile-page" id="top">
 
   <!-- Navigation -->
   <nav class="cb-nav">
-    <a href="#" class="nav-logo">Chapal Barua</a>
+    <a [routerLink]="[]" fragment="top" class="nav-logo">Chapal Barua</a>
     <ul class="nav-links">
-      <li><a href="#skills">Skills</a></li>
-      <li><a href="#experience">Experience</a></li>
-      <li><a href="#projects">Projects</a></li>
-      <li><a href="#education">Education</a></li>
-      <li><a href="#contact">Contact</a></li>
+      <li><a [routerLink]="[]" fragment="skills">Skills</a></li>
+      <li><a [routerLink]="[]" fragment="experience">Experience</a></li>
+      <li><a [routerLink]="[]" fragment="projects">Projects</a></li>
+      <li><a [routerLink]="[]" fragment="education">Education</a></li>
+      <li><a [routerLink]="[]" fragment="contact">Contact</a></li>
     </ul>
   </nav>
 
@@ -65,7 +65,7 @@
         <div class="hero-card-accent teal"></div>
         <p class="hero-card-label">Core expertise</p>
         <h3>Angular · TypeScript · Java</h3>
-        <p>Full-stack delivery, enterprise UI, real-time systems</p>
+        <p>Full-stack delivery, Enterprise UI, Real-time systems</p>
       </article>
 
       <article class="hero-card">
