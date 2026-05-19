@@ -41,17 +41,23 @@
   z-index: 9999;
   transform: translate(-50%, -50%);
   transition: width 0.2s, height 0.2s;
-  mix-blend-mode: multiply;
+  display: block;
+  opacity: 1;
+  box-shadow:
+    0 0 0 1.5px rgba(92, 68, 28, 0.42),
+    0 0 14px rgba(200, 169, 110, 0.32);
 }
 .cursor-ring {
   position: fixed;
   width: 36px; height: 36px;
   border-radius: 50%;
-  border: 1px solid var(--gold);
+  border: 1.5px solid rgba(154, 122, 66, 0.92);
   pointer-events: none;
   z-index: 9998;
   transform: translate(-50%, -50%);
-  opacity: 0.6;
+  display: block;
+  opacity: 0.82;
+  box-shadow: 0 0 20px rgba(154, 122, 66, 0.18);
 }
 
 /* ── Nav ── */
