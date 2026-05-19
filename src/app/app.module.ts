@@ -28,6 +28,7 @@ import { BidLabelComponent } from './bid-label/bid-label.component';
 import { RulebookComponent } from './modals/rulebook/rulebook.component';
 import { SupportComponent } from './support/support.component';
 import { PrivacyComponent } from './privacy/privacy.component';
+import { ProfileComponent } from './profile/profile.component';
 
 const config: SocketIoConfig = { url: environment.socketUrl, options: { autoConnect: true } };
 
@@ -46,7 +47,8 @@ const config: SocketIoConfig = { url: environment.socketUrl, options: { autoConn
     BidLabelComponent,
     RulebookComponent,
     SupportComponent,
-    PrivacyComponent
+    PrivacyComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,

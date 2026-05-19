@@ -1,0 +1,201 @@
+<div class="cursor" id="cb-cursor"></div>
+<div class="cursor-ring" id="cb-cursor-ring"></div>
+
+<main class="profile-page">
+
+  <!-- Navigation -->
+  <nav class="cb-nav">
+    <a href="#" class="nav-logo">Chapal Barua</a>
+    <ul class="nav-links">
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#education">Education</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-bg-text">UI</div>
+
+    <div class="hero-left">
+      <div class="hero-tag">Available for opportunities</div>
+      <h1 class="hero-name">Chapal<br><em>Barua</em></h1>
+      <p class="hero-title">User Interface Engineer</p>
+      <p class="hero-summary">{{ summary }}</p>
+
+      <div class="hero-stats">
+        <div class="stat" *ngFor="let s of stats">
+          <div class="stat-num">{{ s.num }}</div>
+          <div class="stat-label">{{ s.label }}</div>
+        </div>
+      </div>
+
+      <div class="hero-cta">
+        <a href="mailto:chapalbuet@yahoo.com" class="btn-primary">Get in touch ↗</a>
+        <a href="https://www.linkedin.com/in/chapal-barua/" target="_blank" rel="noreferrer" class="btn-outline">LinkedIn</a>
+        <a href="https://apps.apple.com/us/app/international-bridge/id6769182954" target="_blank" rel="noreferrer" class="btn-gold">App Store ↗</a>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <a href="https://apps.apple.com/us/app/international-bridge/id6769182954" target="_blank" rel="noreferrer" class="appstore-banner">
+        <div class="appstore-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.7 9.05 7.4c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.39-1.32 2.76-2.54 3.99zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+          </svg>
+        </div>
+        <div class="appstore-text">
+          <small>Now live on</small>
+          <strong>International Bridge — iOS</strong>
+        </div>
+        <div class="appstore-arrow">↗</div>
+      </a>
+
+      <article class="hero-card">
+        <div class="hero-card-accent"></div>
+        <p class="hero-card-label">Currently</p>
+        <h3>Senior Application Developer</h3>
+        <p>City of Austin Aviation · Austin, TX</p>
+        <span class="exp-current-badge">Active</span>
+      </article>
+
+      <article class="hero-card">
+        <div class="hero-card-accent teal"></div>
+        <p class="hero-card-label">Core expertise</p>
+        <h3>Angular · TypeScript · Java</h3>
+        <p>Full-stack delivery, enterprise UI, real-time systems</p>
+      </article>
+
+      <article class="hero-card">
+        <div class="hero-card-accent dim"></div>
+        <p class="hero-card-label">Education</p>
+        <h3>M.Sc. — UT San Antonio</h3>
+        <p>Electrical &amp; Computer Engineering</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section id="skills" class="skills-section">
+    <div class="section-inner">
+      <div class="skills-layout">
+        <div class="skills-intro cb-reveal">
+          <div class="section-tag">Capabilities</div>
+          <h2 class="section-title">Built to<br><em>ship.</em></h2>
+          <p>A decade across Angular enterprise apps, Java Spring Boot APIs, and Node.js backends. The full stack, end-to-end.</p>
+        </div>
+        <div class="skills-grid cb-reveal">
+          <div class="skill-category" *ngFor="let group of skills">
+            <div class="skill-category-label">{{ group.label }}</div>
+            <div class="skill-chips">
+              <span class="chip" [class.highlight]="group.highlight?.includes(item)" *ngFor="let item of group.items">{{ item }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Experience -->
+  <section id="experience" class="exp-section">
+    <div class="section-inner">
+      <div class="section-tag cb-reveal">Career</div>
+      <h2 class="section-title cb-reveal">Where I've<br><em>worked.</em></h2>
+      <div class="exp-list">
+        <div class="exp-item cb-reveal" *ngFor="let item of experience">
+          <div class="exp-meta">
+            <div class="exp-period">{{ item.period }}</div>
+            <div class="exp-location">{{ item.location }}</div>
+            <span class="exp-current-badge" *ngIf="item.current">Active</span>
+          </div>
+          <div class="exp-body">
+            <div class="exp-company">{{ item.company }}</div>
+            <h3 class="exp-role">{{ item.role }}</h3>
+            <ul class="exp-bullets">
+              <li *ngFor="let b of item.bullets">{{ b }}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section id="projects" class="projects-section">
+    <div class="section-inner">
+      <div class="section-tag cb-reveal">Public Work</div>
+      <h2 class="section-title light cb-reveal">Things I've<br><em>shipped.</em></h2>
+      <div class="projects-grid cb-reveal">
+        <a *ngFor="let p of projects; let i = index"
+           [href]="p.href"
+           target="_blank"
+           rel="noreferrer"
+           class="project-card"
+           [class.project-card-featured]="p.featured">
+          <div class="project-card-num">0{{ i + 1 }}</div>
+          <div class="ios-badge" *ngIf="p.iosBadge"><div class="ios-dot"></div>Live on App Store</div>
+          <div class="project-tag">{{ p.tag }}</div>
+          <h3 class="project-title">{{ p.title }}</h3>
+          <p class="project-desc">{{ p.description }}</p>
+          <div class="project-stack-list">
+            <span class="stack-tag" *ngFor="let t of p.stack">{{ t }}</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Education -->
+  <section id="education" class="edu-section">
+    <div class="section-inner">
+      <div class="section-tag cb-reveal">Academic</div>
+      <h2 class="section-title cb-reveal">Where I<br><em>studied.</em></h2>
+      <div class="edu-grid cb-reveal">
+        <div class="edu-card" *ngFor="let e of education">
+          <div class="edu-icon">{{ e.initial }}</div>
+          <h3 class="edu-degree">{{ e.degree }}</h3>
+          <p class="edu-school">{{ e.school }}</p>
+          <span class="edu-location">{{ e.location }}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="contact-section">
+    <div class="section-inner">
+      <div class="contact-layout">
+        <div class="contact-text cb-reveal">
+          <h2>Let's work<br><em>together.</em></h2>
+          <p>Open to interesting engineering challenges. Whether it's enterprise Angular work, full-stack products, or something new — reach out.</p>
+          <a href="mailto:chapalbuet@yahoo.com" class="btn-primary">Send a message ↗</a>
+        </div>
+        <div class="contact-info cb-reveal">
+          <a *ngFor="let item of contactItems"
+             [href]="item.href || null"
+             [target]="item.external ? '_blank' : null"
+             rel="noreferrer"
+             class="contact-row"
+             [class.no-link]="!item.href">
+            <span class="contact-row-icon">{{ item.label }}</span>
+            <span>{{ item.value }}</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="cb-footer">
+    <p>© 2025 Chapal Barua · Austin, TX</p>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/chapal-barua/" target="_blank" rel="noreferrer">LinkedIn</a>
+      <a href="https://apps.apple.com/us/app/international-bridge/id6769182954" target="_blank" rel="noreferrer">App Store</a>
+      <a href="https://www.bso-toronto.ca" target="_blank" rel="noreferrer">BSO</a>
+      <a href="mailto:chapalbuet@yahoo.com">Email</a>
+    </div>
+  </footer>
+
+</main>

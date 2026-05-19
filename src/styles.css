@@ -2,6 +2,7 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body.profile-route { overflow: auto !important; }
 
 .toast-bonus {
     background: linear-gradient(135deg, #ffcf33, #ff8f1f) !important;

@@ -5,6 +5,7 @@ import { AuthGuard } from './auth.guard';
 import { LoginComponent } from './login/login.component';
 import { SupportComponent } from './support/support.component';
 import { PrivacyComponent } from './privacy/privacy.component';
+import { ProfileComponent } from './profile/profile.component';
 
 const routes: Routes = [
   {path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -12,6 +13,7 @@ const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'support', component: SupportComponent},
   {path: 'privacy', component: PrivacyComponent},
+  {path: 'profile', component: ProfileComponent},
   {path: '**', redirectTo: '/login'}
 ];
 
