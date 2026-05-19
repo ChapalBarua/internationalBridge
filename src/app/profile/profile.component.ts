@@ -49,10 +49,10 @@ type ContactItem = {
 })
 export class ProfileComponent implements OnInit, OnDestroy {
 
-  readonly summary = 'User Interface Engineer with 10+ years of experience building Angular-based enterprise applications, modern frontend experiences, and API-driven products. From banking risk platforms at RBC to a published iOS card game — I build interfaces that hold up under pressure.';
+  readonly summary = 'User Interface Engineer with 8+ years of experience building Angular-based enterprise applications, modern frontend experiences, and API-driven products. From banking risk platforms at RBC to a published iOS card game — I build interfaces that hold up under pressure.';
 
   readonly stats: Stat[] = [
-    { num: '10+', label: 'Years experience' },
+    { num: '8+', label: 'Years experience' },
     { num: '5',  label: 'Companies' },
     { num: '2',  label: 'Live products' }
   ];
@@ -172,6 +172,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
     { label: 'LinkedIn', value: 'linkedin.com/in/chapal-barua',   href: 'https://www.linkedin.com/in/chapal-barua/', external: true },
     { label: 'App Store',value: 'International Bridge — iOS ↗',   href: 'https://apps.apple.com/us/app/international-bridge/id6769182954', external: true }
   ];
+
+  scrollTo(id: string): void {
+    const el = this.document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
 
   private cursorX = 0;
   private cursorY = 0;

@@ -1,22 +1,22 @@
 <div class="cursor" id="cb-cursor"></div>
 <div class="cursor-ring" id="cb-cursor-ring"></div>
 
-<main class="profile-page" id="top">
+<main class="profile-page">
 
   <!-- Navigation -->
   <nav class="cb-nav">
-    <a [routerLink]="['/profile']" fragment="top" class="nav-logo">Chapal Barua</a>
+    <span class="nav-logo" (click)="scrollTo('top')">Chapal Barua</span>
     <ul class="nav-links">
-      <li><a [routerLink]="['/profile']" fragment="skills">Skills</a></li>
-      <li><a [routerLink]="['/profile']" fragment="experience">Experience</a></li>
-      <li><a [routerLink]="['/profile']" fragment="projects">Projects</a></li>
-      <li><a [routerLink]="['/profile']" fragment="education">Education</a></li>
-      <li><a [routerLink]="['/profile']" fragment="contact">Contact</a></li>
+      <li><span (click)="scrollTo('skills')">Skills</span></li>
+      <li><span (click)="scrollTo('experience')">Experience</span></li>
+      <li><span (click)="scrollTo('projects')">Projects</span></li>
+      <li><span (click)="scrollTo('education')">Education</span></li>
+      <li><span (click)="scrollTo('contact')">Contact</span></li>
     </ul>
   </nav>
 
   <!-- Hero -->
-  <section class="hero">
+  <section class="hero" id="top">
     <div class="hero-bg-text">UI</div>
 
     <div class="hero-left">
@@ -65,7 +65,7 @@
         <div class="hero-card-accent teal"></div>
         <p class="hero-card-label">Core expertise</p>
         <h3>Angular · TypeScript · Java</h3>
-        <p>Full-stack delivery, Enterprise UI, Real-time systems</p>
+        <p>Full-stack delivery, enterprise UI, real-time systems</p>
       </article>
 
       <article class="hero-card">

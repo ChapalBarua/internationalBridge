@@ -74,6 +74,7 @@
   letter-spacing: 0.12em;
   color: var(--ink);
   text-decoration: none;
+  cursor: pointer;
 }
 .nav-links {
   display: flex;
@@ -81,16 +82,16 @@
   list-style: none;
   margin: 0; padding: 0;
 }
-.nav-links a {
+.nav-links span {
   font-family: 'DM Mono', monospace;
   font-size: 0.72rem;
   letter-spacing: 0.1em;
   color: var(--ink-muted);
-  text-decoration: none;
   text-transform: uppercase;
   transition: color 0.2s;
+  cursor: pointer;
 }
-.nav-links a:hover { color: var(--ink); }
+.nav-links span:hover { color: var(--ink); }
 
 /* ── Hero ── */
 .hero {
